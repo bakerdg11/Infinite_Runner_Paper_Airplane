@@ -7,8 +7,10 @@ using UnityEngine.UI;
 
 public class UpgradesManager : MonoBehaviour
 {
+    public static UpgradesManager Instance;
     public GameManager gameManager;
-    public PaperAirplaneController airplaneController;
+    public StatsManager statsManager;
+    public PlayerController playerController;
 
 
     // ------------------------------------ABILITIES ---------------------------------------
@@ -65,6 +67,13 @@ public class UpgradesManager : MonoBehaviour
     public TMP_Text rightMissileAmmoText;
 
 
+    [Header("Ability & Stats Upgrads Menu Text")]
+    public TMP_Text upgradesMenuTotalCreditsText;
+    public TMP_Text upgradesMenuTotalAbilityPointsText;
+    public TMP_Text upgradesStatsMenuTotalCreditsText;
+    public TMP_Text upgradesAbilitiesMenuTotalAbilityPointsText;
+
+
     [Header("Abilities Upgrade Page Current / Max")]
     public TMP_Text edrCurrent;
     public TMP_Text edrMax;
@@ -118,13 +127,22 @@ public class UpgradesManager : MonoBehaviour
     public int missileAmmoCurrentLevel;
     public int missileAmmoMaxLevel;
 
-
-
-    void Awake()
+    private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+
+            // Listen for scene changes to re-hook references
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
+
 
     void OnDestroy()
     {
@@ -135,11 +153,11 @@ public class UpgradesManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        airplaneController = FindFirstObjectByType<PaperAirplaneController>();
+        playerController = FindFirstObjectByType<PlayerController>();
 
-        if (airplaneController == null)
+        if (playerController == null)
         {
-            Debug.LogWarning("PaperAirplaneController not found in scene " + scene.name);
+            Debug.LogWarning("PaperplayerController not found in scene " + scene.name);
         }
 
 
@@ -322,7 +340,7 @@ public class UpgradesManager : MonoBehaviour
     private IEnumerator BoostForSeconds(float duration)
     {
         boostEnabled = true;
-        airplaneController.AirplaneBoost();
+        playerController.AirplaneBoost();
 
         // Enable slider and reset value
         if (boostSlider != null)
@@ -349,7 +367,7 @@ public class UpgradesManager : MonoBehaviour
             boostSlider.gameObject.SetActive(false);
         }
 
-        airplaneController.AirplaneBoostEnd();
+        playerController.AirplaneBoostEnd();
         boostEnabled = false;
         boostCoroutine = null;
     }
@@ -412,7 +430,7 @@ public class UpgradesManager : MonoBehaviour
     private IEnumerator DashForSeconds(float duration)
     {
         dashEnabled = true;
-        airplaneController.AirplaneDash();
+        playerController.AirplaneDash();
 
         // Enable slider and reset value
         if (dashSlider != null)
@@ -439,7 +457,7 @@ public class UpgradesManager : MonoBehaviour
             dashSlider.gameObject.SetActive(false);
         }
 
-        airplaneController.AirplaneDashEnd();
+        playerController.AirplaneDashEnd();
         dashEnabled = false;
         dashCoroutine = null;
     }
@@ -513,14 +531,14 @@ public class UpgradesManager : MonoBehaviour
     // Upgrading Abilities ---------------------------------------
     public void UpgradeEnergyDepletionRate()
     {
-        if (gameManager.totalCredits >= 10)
+        if (statsManager.totalCredits >= 10)
         {
             if (edrCurrentLevel < edrMaxLevel)
             {
-                airplaneController.energyDepletionRate -= 0.01f;
-                gameManager.totalCredits -= 10;
+                playerController.energyDepletionRate -= 0.01f;
+                statsManager.totalCredits -= 10;
                 edrCurrentLevel += 1;
-                gameManager.UpdateUpgradesMenuStats();
+                UpdateUpgradesMenuStats();
                 UpdateAbilityLevelsText();
             }
         }
@@ -529,14 +547,14 @@ public class UpgradesManager : MonoBehaviour
 
     public void UpgradeLaneChangeSpeed()
     {
-        if (gameManager.totalCredits >= 10)
+        if (statsManager.totalCredits >= 10)
         {
             if (lcsCurrentLevel < lcsMaxLevel)
             {
-                airplaneController.lateralMoveSpeed += 0.5f;
-                gameManager.totalCredits -= 10;
+                playerController.lateralMoveSpeed += 0.5f;
+                statsManager.totalCredits -= 10;
                 lcsCurrentLevel += 1;
-                gameManager.UpdateUpgradesMenuStats();
+                UpdateUpgradesMenuStats();
                 UpdateAbilityLevelsText();
             }
 
@@ -549,14 +567,14 @@ public class UpgradesManager : MonoBehaviour
     // Upgrading Abilities ----------------------------------------
     public void UpgradePauseEnergyDepletionLength()
     {
-        if (gameManager.totalAbilityPoints >= 1)
+        if (statsManager.totalAbilityPoints >= 1)
         {
             if (pedLengthCurrentLevel < pedLengthMaxLevel)
             {
                 energyPauseDuration += 1;
-                gameManager.totalAbilityPoints -= 1;
+                statsManager.totalAbilityPoints -= 1;
                 pedLengthCurrentLevel += 1;
-                gameManager.UpdateUpgradesMenuStats();
+                UpdateUpgradesMenuStats();
                 UpdateAbilityLevelsText();
             }
 
@@ -565,14 +583,14 @@ public class UpgradesManager : MonoBehaviour
 
     public void UpgradePauseEnergyDepletionAmmo()
     {
-        if (gameManager.totalAbilityPoints >= 1)
+        if (statsManager.totalAbilityPoints >= 1)
         {
             if (pedAmmoCurrentLevel < pedAmmoMaxLevel)
             {
                 pauseEnergyAmmo += 1;
-                gameManager.totalAbilityPoints -= 1;
+                statsManager.totalAbilityPoints -= 1;
                 pedAmmoCurrentLevel += 1;
-                gameManager.UpdateUpgradesMenuStats();
+                UpdateUpgradesMenuStats();
                 UpdateAbilityLevelsText();
             }
 
@@ -581,14 +599,14 @@ public class UpgradesManager : MonoBehaviour
 
     public void UpgradeBoostLength()
     {
-        if (gameManager.totalAbilityPoints >= 1)
+        if (statsManager.totalAbilityPoints >= 1)
         {
             if (boostLengthCurrentLevel < boostLengthMaxLevel)
             {
                 boostDuration += 0.2f;
-                gameManager.totalAbilityPoints -= 1;
+                statsManager.totalAbilityPoints -= 1;
                 boostLengthCurrentLevel += 1;
-                gameManager.UpdateUpgradesMenuStats();
+                UpdateUpgradesMenuStats();
                 UpdateAbilityLevelsText();
             }
 
@@ -597,14 +615,14 @@ public class UpgradesManager : MonoBehaviour
 
     public void UpgradeBoostAmmo()
     {
-        if (gameManager.totalAbilityPoints >= 1)
+        if (statsManager.totalAbilityPoints >= 1)
         {
             if (boostAmmoCurrentLevel < boostAmmoMaxLevel)
             {
                 boostAmmo += 1;
-                gameManager.totalAbilityPoints -= 1;
+                statsManager.totalAbilityPoints -= 1;
                 boostAmmoCurrentLevel += 1;
-                gameManager.UpdateUpgradesMenuStats();
+                UpdateUpgradesMenuStats();
                 UpdateAbilityLevelsText();
             }
 
@@ -613,14 +631,14 @@ public class UpgradesManager : MonoBehaviour
 
     public void UpgradeInvincibilityLength()
     {
-        if (gameManager.totalAbilityPoints >= 1)
+        if (statsManager.totalAbilityPoints >= 1)
         {
             if (invincibilityLengthCurrentLevel < invincibilityLengthMaxLevel)
             {
                 invincibleDuration += 0.2f;
-                gameManager.totalAbilityPoints -= 1;
+                statsManager.totalAbilityPoints -= 1;
                 invincibilityLengthCurrentLevel += 1;
-                gameManager.UpdateUpgradesMenuStats();
+                UpdateUpgradesMenuStats();
                 UpdateAbilityLevelsText();
             }
 
@@ -629,14 +647,14 @@ public class UpgradesManager : MonoBehaviour
 
     public void UpgradeInvincibilityAmmo()
     {
-        if (gameManager.totalAbilityPoints >= 1)
+        if (statsManager.totalAbilityPoints >= 1)
         {
             if (invincibilityAmmoCurrentLevel < invincibilityAmmoMaxLevel)
             {
                 invincibilityAmmo += 1;
-                gameManager.totalAbilityPoints -= 1;
+                statsManager.totalAbilityPoints -= 1;
                 invincibilityAmmoCurrentLevel += 1;
-                gameManager.UpdateUpgradesMenuStats();
+                UpdateUpgradesMenuStats();
                 UpdateAbilityLevelsText();
             }
 
@@ -645,14 +663,14 @@ public class UpgradesManager : MonoBehaviour
 
     public void UpgradeDashAmmo()
     {
-        if (gameManager.totalAbilityPoints >= 1)
+        if (statsManager.totalAbilityPoints >= 1)
         {
             if (dashAmmoCurrentLevel < dashAmmoMaxLevel)
             {
                 dashAmmo += 1;
-                gameManager.totalAbilityPoints -= 1;
+                statsManager.totalAbilityPoints -= 1;
                 dashAmmoCurrentLevel += 1;
-                gameManager.UpdateUpgradesMenuStats();
+                UpdateUpgradesMenuStats();
                 UpdateAbilityLevelsText();
             }
 
@@ -661,14 +679,14 @@ public class UpgradesManager : MonoBehaviour
 
     public void UpgradeMissileAmmo()
     {
-        if (gameManager.totalAbilityPoints >= 1)
+        if (statsManager.totalAbilityPoints >= 1)
         {
             if (missileAmmoCurrentLevel < missileAmmoMaxLevel)
             {
                 missileAmmo += 1;
-                gameManager.totalAbilityPoints -= 1;
+                statsManager.totalAbilityPoints -= 1;
                 missileAmmoCurrentLevel += 1;
-                gameManager.UpdateUpgradesMenuStats();
+                UpdateUpgradesMenuStats();
                 UpdateAbilityLevelsText();
             }
 
@@ -694,6 +712,18 @@ public class UpgradesManager : MonoBehaviour
         dashAmmoCurrent.text = dashAmmoCurrentLevel.ToString();
 
         missileAmmoCurrent.text = missileAmmoCurrentLevel.ToString();
+    }
+
+
+    public void UpdateUpgradesMenuStats()
+    {
+        if (upgradesMenuTotalCreditsText != null)
+        {
+            upgradesMenuTotalCreditsText.text = "Credits: " + statsManager.totalCredits;
+            upgradesMenuTotalAbilityPointsText.text = "Ability Points: " + statsManager.totalAbilityPoints;
+            upgradesStatsMenuTotalCreditsText.text = "Credits: " + statsManager.totalCredits;
+            upgradesAbilitiesMenuTotalAbilityPointsText.text = "Ability Points: " + statsManager.totalAbilityPoints;
+        }
     }
 
 

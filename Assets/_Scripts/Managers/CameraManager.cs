@@ -2,34 +2,48 @@
 
 public class CameraManager : MonoBehaviour
 {
-    public Transform paperAirplane;
-    public PlayerController player;           // drag your PlayerController here
+    public Transform paperAirplane;     // will auto-fill from the player
+    public PlayerController player;     // will auto-fill from PlayerManager
     public Vector3 offset = new Vector3(0, 2, -4);
 
     [Header("Follow")]
-    public float followSpeed = 5f;            // post-launch follow speed
+    public float followSpeed = 5f;
     public float preLaunchFollowSpeed = 0f;   // 0 = no follow before launch
     public bool rampAfterLaunch = true;
     public float rampDuration = 0.4f;
 
     [Header("Look")]
     [Range(0f, 1f)]
-    public float lookHorizontalWeight = 0.5f; // 0 = ignore player's X, 1 = fully track X
-    public float lookAhead = 8f;              // how far ahead to look along forward
+    public float lookHorizontalWeight = 0.5f;
+    public float lookAhead = 8f;
     public float lookAtVerticalOffset = 1.0f;
-    public float yawDamp = 10f;               // how quickly the yaw catches up (optional smoothing)
+    public float yawDamp = 10f;
 
     float currentFollowSpeed;
-    float launchT; // 0→1
-    float yawVel;  // for SmoothDampAngle
+    float launchT;  // 0→1
+    float yawVel;   // for SmoothDampAngle
 
     void Start()
     {
         currentFollowSpeed = preLaunchFollowSpeed;
+
+        // Auto-hook the persistent player if not set in the Inspector
+        if (player == null && PlayerManager.Instance != null)
+            player = PlayerManager.Instance.playerController;
+
+        if (player != null && paperAirplane == null)
+            paperAirplane = player.transform;
     }
 
     void LateUpdate()
     {
+        // One-time fallback in case script order delayed the player hookup
+        if ((player == null || paperAirplane == null) && PlayerManager.Instance != null)
+        {
+            player = PlayerManager.Instance.playerController;
+            paperAirplane = player != null ? player.transform : null;
+        }
+
         if (paperAirplane == null || player == null) return;
 
         // Ramp follow speed after launch
@@ -44,33 +58,26 @@ public class CameraManager : MonoBehaviour
             launchT = 0f;
         }
 
-        // --- Position: lock X, follow Y/Z with exponential smoothing ---
+        // Position follow (lock X for stability)
         Vector3 desired = new Vector3(
-            transform.position.x,                        // keep camera X fixed for stability
+            transform.position.x,
             paperAirplane.position.y + offset.y,
             paperAirplane.position.z + offset.z
         );
-
         float s = 1f - Mathf.Exp(-currentFollowSpeed * Time.deltaTime);
         transform.position = Vector3.Lerp(transform.position, desired, s);
 
-        // --- Look-at: blend X tracking + look-ahead along forward (flattened) ---
-        // 1) Flatten the plane's forward so banking (roll) doesn't sway the look target.
-        Vector3 fwdFlat = paperAirplane.forward;
-        fwdFlat.y = 0f;
+        // Look target: blend X + look-ahead along flattened forward
+        Vector3 fwdFlat = paperAirplane.forward; fwdFlat.y = 0f;
         if (fwdFlat.sqrMagnitude > 0.0001f) fwdFlat.Normalize();
 
-        // 2) Blend how much of the player's X we follow (0..1)
         float blendedX = Mathf.Lerp(transform.position.x, paperAirplane.position.x, lookHorizontalWeight);
-
-        // 3) Build the look target a bit ahead on the track
         Vector3 lookAtPoint = new Vector3(
             blendedX,
             paperAirplane.position.y + lookAtVerticalOffset,
             paperAirplane.position.z
         ) + fwdFlat * lookAhead;
 
-        // 4) Optional: smooth yaw so it doesn’t whip when changing lanes quickly
         Vector3 toTarget = lookAtPoint - transform.position;
         if (toTarget.sqrMagnitude > 0.0001f)
         {
@@ -79,7 +86,6 @@ public class CameraManager : MonoBehaviour
             float smoothedYaw = Mathf.SmoothDampAngle(currentYaw, targetYaw, ref yawVel, 1f / Mathf.Max(0.0001f, yawDamp));
             Quaternion rot = Quaternion.Euler(0f, smoothedYaw, 0f);
 
-            // Pitch toward the target too (simple look rotation with preserved smoothed yaw)
             float targetPitch = -Mathf.Atan2(toTarget.y, new Vector2(toTarget.x, toTarget.z).magnitude) * Mathf.Rad2Deg;
             Quaternion pitchRot = Quaternion.Euler(targetPitch, 0f, 0f);
 

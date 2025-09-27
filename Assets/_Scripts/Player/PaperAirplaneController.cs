@@ -1,3 +1,5 @@
+/*
+
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem; // NEW input system
@@ -193,11 +195,7 @@ public class PaperAirplaneController : MonoBehaviour
         isHoldingRight = false;
     }
 
-    // ----- Gesture hooks from TouchInputManager -----
-    public void OnDoubleTap() { /* e.g., Boost or Dash trigger if you want */ }
-    public void OnSwipeLeft() { /* optional: lane, roll, or dash logic */ }
-    public void OnSwipeRight() { /* optional: lane, roll, or dash logic */ }
-    public void OnSwipeUp()
+
     {
         if (!isSwipingUp && launched)
         {
@@ -206,8 +204,7 @@ public class PaperAirplaneController : MonoBehaviour
             originalY = transform.position.y;
         }
     }
-    public void OnSwipeDown() { /* optional */ }
-    public void OnTouchRelease() { /* optional */ }
+
 
     // ----- Missile -----
     public void FireMissile()
@@ -279,3 +276,5 @@ public class PaperAirplaneController : MonoBehaviour
         Debug.Log($"[Speed Update] Dashing: {isDashing}, Boosting: {isBoosting}, Speed: {currentSpeed}");
     }
 }
+
+*/

@@ -4,46 +4,64 @@ using UnityEngine.UI;
 
 public class LevelSelectMenu : MonoBehaviour
 {
+    public GameManager gameManager;
     public UpgradesManager upgradesManager;
 
+    [Header("Buttons")]
     public Button level1Button;
     public Button level2Button;
     public Button level3Button;
     public Button backButton;
 
-
-
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        level2Button.gameObject.SetActive(false);
-        level3Button.gameObject.SetActive(false);
+        // Hide locked levels (null-safe)
+        if (level2Button != null)
+        {
+            level2Button.gameObject.SetActive(false);
+        }
 
-        level1Button.onClick.AddListener(BeginLevel1);
-        backButton.onClick.AddListener(BackToMain);
+        if (level3Button != null) 
+        {
+            level3Button.gameObject.SetActive(false);
+        }
+
+        if (level1Button != null) 
+        {
+            level1Button.onClick.AddListener(BeginLevel1);
+        }
+
+        if (backButton != null) 
+        {
+            backButton.onClick.AddListener(BackToMain);
+        }
     }
 
 
     private void BeginLevel1()
     {
-        if (PersistentMenuManager.Instance != null)
+        // If you’ve added the PersistentPlayerManager to Bootstrap, start a fresh run
+        if (PlayerManager.Instance != null)
         {
-            BeginGame();
-            //upgradesManager.GameStartAmmoAmounts();
+            PlayerManager.Instance.BeginNewRun();
         }
         else
         {
-            Debug.LogWarning("PersistentMenuManager not found.");
+            Debug.LogWarning("PersistentPlayerManager not found. Player may not be created/moved.");
         }
+
+        // Close all menus if it’s up
+        if (PersistentMenuManager.Instance != null)
+        {
+            PersistentMenuManager.Instance.HideLevelSelectPanel();
+        }
+
+
+        // Load the gameplay scene (single load is fine—persistent systems survive)
+        SceneManager.LoadScene("2.Level1", LoadSceneMode.Single);
+
+
     }
-
-
-    private void BeginGame()
-    {
-        PersistentMenuManager.Instance.CloseAllMenus();
-        SceneManager.LoadScene("2.Level1", LoadSceneMode.Additive);
-    }
-
 
 
     private void BackToMain()

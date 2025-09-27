@@ -187,9 +187,9 @@ public class PersistentMenuManager : MonoBehaviour
     
     public void OpenCrashMenu()
     {
-        if (PaperAirplaneController.Instance != null)
+        if (PlayerController.Instance != null)
         {
-            PaperAirplaneController.Instance.launched = false;
+            PlayerController.Instance.launched = false;
         }
 
         OpenMenu(crashMenu);

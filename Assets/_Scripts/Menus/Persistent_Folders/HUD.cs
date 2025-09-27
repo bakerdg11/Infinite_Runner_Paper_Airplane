@@ -6,8 +6,11 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
+    public static HUD Instance;
+
+
+    private PlayerController playerController;
     public GameManager gameManager;
-    public PaperAirplaneController airplaneController;
     public UpgradesManager upgradesManager;
 
     public Slider energySlider;
@@ -22,6 +25,19 @@ public class HUD : MonoBehaviour
     public Button dash;
     public Button[] missileLaunch;
 
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);   // persists
+        }
+        else
+        {
+            Destroy(gameObject);             // prevent duplicates
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -47,9 +63,9 @@ public class HUD : MonoBehaviour
 
     private IEnumerator FindAirplaneWhenReady()
     {
-        while (airplaneController == null)
+        while (playerController == null)
         {
-            airplaneController = FindFirstObjectByType<PaperAirplaneController>();
+            playerController = FindFirstObjectByType<PlayerController>();
             yield return null;
         }
 
@@ -159,7 +175,7 @@ public class HUD : MonoBehaviour
             if (upgradesManager.missileAmmo >= 1)
             {
                 upgradesManager.Missile();
-                airplaneController.FireMissile();
+                playerController.FireMissile();
                 upgradesManager.missileAmmo -= 1;
                 upgradesManager.UpdateAmmoUI();
             }
