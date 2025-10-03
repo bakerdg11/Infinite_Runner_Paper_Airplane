@@ -7,7 +7,8 @@ using UnityEngine.UI;
 
 public class UpgradesManager : MonoBehaviour
 {
-    public static UpgradesManager Instance;
+    public static UpgradesManager Instance { get; private set; }
+
     public GameManager gameManager;
     public StatsManager statsManager;
     public PlayerController playerController;
@@ -129,18 +130,11 @@ public class UpgradesManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
 
-            // Listen for scene changes to re-hook references
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
 
@@ -153,13 +147,13 @@ public class UpgradesManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        playerController = FindFirstObjectByType<PlayerController>();
+        /*playerController = FindFirstObjectByType<PlayerController>();
 
         if (playerController == null)
         {
             Debug.LogWarning("PaperplayerController not found in scene " + scene.name);
         }
-
+        */
 
 
 

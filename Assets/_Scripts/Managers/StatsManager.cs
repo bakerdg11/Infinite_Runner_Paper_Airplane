@@ -4,7 +4,7 @@ using TMPro;
 
 public class StatsManager : MonoBehaviour
 {
-    public static StatsManager Instance;
+    public static StatsManager Instance { get; private set; }
 
     [Header("Runtime Refs")]
     public PlayerController playerController; // bound each gameplay scene
@@ -62,7 +62,7 @@ public class StatsManager : MonoBehaviour
         }
 
         // Bind to the persistent player for gameplay scenes
-        playerController = PlayerManager.Instance != null ? PlayerManager.Instance.playerController : null;
+        //playerController = PlayerManager.Instance != null ? PlayerManager.Instance.playerController : null;
 
         // Find the starting/spawn point of this scene (prefer PlayerSpawnPoint)
         startingPoint = FindStartingPointInScene(scene);
@@ -76,10 +76,7 @@ public class StatsManager : MonoBehaviour
     {
         if (playerController != null && startingPoint != null && distanceTravelledText != null)
         {
-            distanceTravelled = Vector3.Distance(
-                playerController.transform.position,
-                startingPoint.transform.position
-            );
+            distanceTravelled = Vector3.Distance(playerController.transform.position, startingPoint.transform.position);
             distanceTravelledText.text = "Distance: " + Mathf.FloorToInt(distanceTravelled) + "m";
         }
     }

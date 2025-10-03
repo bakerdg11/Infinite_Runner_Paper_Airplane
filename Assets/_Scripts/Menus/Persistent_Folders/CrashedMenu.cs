@@ -6,6 +6,7 @@ public class CrashedMenu : MonoBehaviour
 {
     public GameManager gameManager;
     public UpgradesManager upgradesManager;
+    public PlayerController playerController;
 
     public Button playAgainButton;
     public Button backToMenuButton;
@@ -46,6 +47,8 @@ public void OnPlayAgainButtonPressed()
         {
             Debug.LogWarning("PersistentMenuManager not found.");
         }
+
+        playerController.ResetPlayerForLevel();
     }
 
 

@@ -9,9 +9,10 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
 
 
-    public GameManager gameManager;
-    public StatsManager statsManager;
-    public UpgradesManager upgradesManager;
+    GameManager gameManager;
+    UpgradesManager upgradesManager;
+    StatsManager statsManager;
+
     public Slider energySlider;
 
 
@@ -55,28 +56,32 @@ public class PlayerController : MonoBehaviour
         Instance = this;
     }
 
+
+    // Called by PlayerManager after the player exists in the scene
+    public void Inject(GameManager gm, UpgradesManager um, StatsManager sm)
+    {
+        gameManager = gm;
+        upgradesManager = um;
+        statsManager = sm;
+    }
+
+
     void Start()
     {
+        // Failsafe: if someone dragged a Player into a test scene without the PlayerManager,
+        // we can still try to resolve singletons to stay functional in-editor.
+        if (gameManager == null || upgradesManager == null || statsManager == null)
+        {
+            TryResolveServices();
+        }
+
+
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
-
-
-        gameManager = GameManager.Instance;
-        if (gameManager == null)
-            Debug.LogError("GameManager not found!");
-
-        statsManager = StatsManager.Instance;
-        if (statsManager == null)
-            Debug.LogError("StatsManager not found!");
-
-        upgradesManager = UpgradesManager.Instance;
-        if (upgradesManager == null)
-            Debug.LogError("UpgradesManager not found!");
 
         TryAttachEnergySlider();
 
         currentSpeed = baseSpeed;
-        // Start in center lane
         _targetX = 0f;
     }
 
@@ -84,6 +89,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (energySlider == null) TryAttachEnergySlider();
+
         // Idle at spawn until the player taps/clicks
         if (!launched)
         {
@@ -92,13 +99,16 @@ public class PlayerController : MonoBehaviour
             else if (Mouse.current != null && Mouse.current.leftButton.isPressed) // editor fallback
                 launched = true;
 
-            if (!launched) return; // don�t move until launched
+            if (!launched) return; // don't move until launched
         }
 
         // 1) Read steering
-        var steer = TouchInputManager.Instance != null
+        var steer = (TouchInputManager.Instance != null)
             ? TouchInputManager.Instance.CurrentSteer
             : SteerDirection.None;
+
+        // IMPORTANT: drive energy from input
+        isSteering = (steer != SteerDirection.None);
 
         switch (steer)
         {
@@ -107,7 +117,7 @@ public class PlayerController : MonoBehaviour
             default: _targetX = 0f; break; // center
         }
 
-        // 2) Move forward constantly (use currentSpeed so future boosts work)
+        // 2) Move forward constantly
         Vector3 pos = transform.position;
         pos += Vector3.forward * (currentSpeed * Time.deltaTime);
 
@@ -116,8 +126,8 @@ public class PlayerController : MonoBehaviour
         pos.x = newX;
         transform.position = pos;
 
-        // 4) Bank (roll) while laterally moving; level when centered
-        float deltaX = _targetX - pos.x;                     // < 0 = moving left, > 0 = moving right
+        // 4) Bank (roll)
+        float deltaX = _targetX - pos.x;
         bool movingHorizontally = Mathf.Abs(deltaX) > 0.01f;
 
         float targetBank = 0f;
@@ -125,7 +135,7 @@ public class PlayerController : MonoBehaviour
         {
             targetBank = (deltaX < 0f) ? maxBankAngle : -maxBankAngle;
             float t = Mathf.Clamp01(Mathf.Abs(deltaX) / laneOffset);
-            targetBank *= t; // scale bank by how far you are from lane target
+            targetBank *= t;
         }
         _bank = Mathf.Lerp(_bank, targetBank, 1f - Mathf.Exp(-bankLerpSpeed * Time.deltaTime));
 
@@ -133,7 +143,7 @@ public class PlayerController : MonoBehaviour
         e.z = _bank;
         transform.rotation = Quaternion.Euler(e);
 
-        // 5) Custom gravity (use rb.velocity, not linearVelocity)
+        // 5) Custom gravity (use rb.velocity)
         if (gravityActive && rb != null)
         {
             rb.linearVelocity += Vector3.down * gravityStrength * Time.deltaTime;
@@ -151,6 +161,57 @@ public class PlayerController : MonoBehaviour
             if (energySlider.value <= 0) EnableGravity();
         }
     }
+
+
+    void TryResolveServices()
+    {
+        gameManager = gameManager ?? GameManager.Instance;
+        upgradesManager = upgradesManager ?? UpgradesManager.Instance;
+        statsManager = statsManager ?? StatsManager.Instance;
+
+        if (gameManager == null || upgradesManager == null || statsManager == null)
+        {
+            Debug.LogWarning("[PlayerController] One or more services not found. " +
+                             "Ensure Bootstrap and managers are loaded before the Player.");
+        }
+    }
+
+
+    public void SetEnergySlider(Slider slider)
+    {
+        energySlider = slider;
+    }
+
+    public void ResetPlayerForLevel()
+    {
+        Debug.Log("ResetPlayerForLevel() called");
+
+        launched = false;
+        gravityActive = false;
+        currentSpeed = baseSpeed;
+
+        if (rb)
+        {
+            rb.useGravity = false;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        _targetX = 0f;
+        _bank = 0f;
+        var rot = transform.rotation.eulerAngles;
+        rot.z = 0f;
+        transform.rotation = Quaternion.Euler(rot);
+
+        if (energySlider != null)
+        {
+            Debug.Log("Resetting Slider");
+            energySlider.value = energySlider.minValue;
+        }
+
+    }
+
+
 
 
 
@@ -184,8 +245,14 @@ public class PlayerController : MonoBehaviour
 
 
 
-    public void EnableGravity() { gravityActive = true; }
-    public void DisableGravity() { gravityActive = false; }
+    public void EnableGravity() 
+    {
+        gravityActive = true;
+    }
+    public void DisableGravity() 
+    {
+        gravityActive = false;
+    }
 
     public void Launch()
     {
@@ -243,6 +310,11 @@ public class PlayerController : MonoBehaviour
 
 
 
+
+
+
+
+
     public void FireMissile()
     {
         if (missilePrefab != null && missileSpawnPoint != null)
@@ -251,14 +323,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+
+
+
+    private void OnCollisionEnter(Collision other)
     {
-        if (other.CompareTag("Ground") && gravityActive)
+        if (other.gameObject.CompareTag("Ground"))
         {
             CrashConditions();
         }
 
-        if (other.CompareTag("Obstacle"))
+        if (other.gameObject.CompareTag("Obstacle"))
         {
             if (!upgradesManager.invincibleEnabled && !upgradesManager.dashEnabled)
             {

@@ -3,6 +3,11 @@ using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
+
+
+
+    /*
+
     public static PlayerManager Instance;
 
     [Header("Player Prefab")]
@@ -31,26 +36,7 @@ public class PlayerManager : MonoBehaviour
             SceneManager.sceneLoaded -= HandleSceneLoaded;
     }
 
-    // ——————————————————— Core ———————————————————
 
-    private void EnsurePlayerExists()
-    {
-        if (playerController != null) return;
-
-        if (playerPrefab == null)
-        {
-            Debug.LogError("[PlayerManager] Player prefab not assigned on the manager.");
-            return;
-        }
-
-        var go = Instantiate(playerPrefab);
-        playerController = go.GetComponent<PlayerController>();
-        if (playerController == null)
-            Debug.LogWarning("[PlayerManager] Player prefab is missing a PlayerController component.");
-
-        // Start hidden in main menu; shown in gameplay scenes
-        playerController.gameObject.SetActive(false);
-    }
 
     private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
     {
@@ -79,27 +65,46 @@ public class PlayerManager : MonoBehaviour
 
         // Gameplay scene: move, reset-per-level, then show
         MovePlayerToSpawnPoint();
-        playerController.ResetForLevel();
+        //playerController.ResetForLevel();
         playerController.gameObject.SetActive(true);
+
+
     }
 
-    // ——————————————————— API ———————————————————
 
-    /// <summary>
-    /// Call this before loading a gameplay scene when starting a brand-new run.
-    /// Keeps it minimal: just makes sure the player exists and resets run state.
-    /// </summary>
+    private void EnsurePlayerExists()
+    {
+        if (playerController != null) return;
+
+        if (playerPrefab == null)
+        {
+            Debug.LogError("[PlayerManager] Player prefab not assigned on the manager.");
+            return;
+        }
+
+        var go = Instantiate(playerPrefab);
+        playerController = go.GetComponent<PlayerController>();
+        if (playerController == null)
+            Debug.LogWarning("[PlayerManager] Player prefab is missing a PlayerController component.");
+
+        // Start hidden in main menu; shown in gameplay scenes
+        playerController.gameObject.SetActive(false);
+    }
+
+
+
     public void BeginNewRun()
     {
         EnsurePlayerExists();
+
         if (playerController != null)
-            playerController.ResetForNewRun();
+        {
+            playerController.ResetPlayerForLevel();
+        }
+
     }
 
-    /// <summary>
-    /// Move player to a scene-defined spawn. 
-    /// Prefers a PlayerSpawnPoint component, then tries a Transform tagged or named "StartingPoint".
-    /// </summary>
+
     public void MovePlayerToSpawnPoint()
     {
         if (playerController == null) return;
@@ -121,4 +126,13 @@ public class PlayerManager : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
         }
     }
+
+
+    public void ResetEnergyBar()
+    {
+
+    }
+    */
+
+
 }

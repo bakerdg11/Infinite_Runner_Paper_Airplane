@@ -4,9 +4,6 @@ using UnityEngine.UI;
 
 public class LevelSelectMenu : MonoBehaviour
 {
-    public GameManager gameManager;
-    public UpgradesManager upgradesManager;
-
     [Header("Buttons")]
     public Button level1Button;
     public Button level2Button;
@@ -40,6 +37,8 @@ public class LevelSelectMenu : MonoBehaviour
 
     private void BeginLevel1()
     {
+
+        /*
         // If you’ve added the PersistentPlayerManager to Bootstrap, start a fresh run
         if (PlayerManager.Instance != null)
         {
@@ -49,7 +48,7 @@ public class LevelSelectMenu : MonoBehaviour
         {
             Debug.LogWarning("PersistentPlayerManager not found. Player may not be created/moved.");
         }
-
+        */
         // Close all menus if it’s up
         if (PersistentMenuManager.Instance != null)
         {

@@ -1,62 +1,60 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using System.Collections;
-using System.Collections.Generic;
 
-[RequireComponent(typeof(RectTransform))]
+[RequireComponent(typeof(Image))]
 public class HoldButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
 {
-    public PlayerController playerController;
-
     [Tooltip("Invoked the moment the button is pressed down.")]
-    public UnityEvent onHoldStart;
-    [Tooltip("Invoked when the press ends (finger up or pointer exits the button).")]
-    public UnityEvent onHoldEnd;
+    public UnityEvent onHoldStart = new UnityEvent();
 
+    [Tooltip("Invoked when the press ends (finger up or pointer exits the button).")]
+    public UnityEvent onHoldEnd = new UnityEvent();
+
+    /// <summary>True while the pointer is pressing this button.</summary>
     public bool IsHeld { get; private set; }
 
     void OnEnable()
     {
-        StartCoroutine(FindAirplaneWhenReady());
+        // Safety: ensure we start in a clean state
+        IsHeld = false;
+
+        // Make sure the Image is set to receive raycasts
+        var img = GetComponent<Image>();
+        if (img != null) img.raycastTarget = true;
     }
 
-    private IEnumerator FindAirplaneWhenReady()
+    void OnDisable()
     {
-        while (playerController == null)
+        // If disabled while held, emit end once to keep state consistent
+        if (IsHeld)
         {
-            playerController = FindFirstObjectByType<PlayerController>();
-            yield return null;
+            IsHeld = false;
+            onHoldEnd.Invoke();
         }
-
-        Debug.Log("Airplane found and ready for HUD interaction");
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData e)
     {
         if (IsHeld) return;
         IsHeld = true;
-        onHoldStart?.Invoke();
-
-        playerController.DepleteEnergy();
+        onHoldStart.Invoke();
+        Debug.Log($"[HoldButton] DOWN on {name}");
     }
-
-    public void OnPointerUp(PointerEventData eventData)
+    public void OnPointerUp(PointerEventData e)
     {
         if (!IsHeld) return;
         IsHeld = false;
-        onHoldEnd?.Invoke();
-
-        playerController.PauseDepleteEnergy();
+        onHoldEnd.Invoke();
+        Debug.Log($"[HoldButton] UP on {name}");
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        // If the finger drags off the button, consider that a release.
+        // If the finger drags off the button, treat as release
         if (!IsHeld) return;
         IsHeld = false;
-        onHoldEnd?.Invoke();
-
-        playerController.PauseDepleteEnergy();
+        onHoldEnd.Invoke();
     }
 }
