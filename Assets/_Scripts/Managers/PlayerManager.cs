@@ -1,138 +1,144 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
 
+    public static PlayerManager Instance { get; private set; }
 
+    [Header("Player Setup")]
+    [SerializeField] private GameObject playerPrefab;     // assign in Bootstrap
+    [SerializeField] private Transform explicitSpawnPoint; // optional override
 
-    /*
-
-    public static PlayerManager Instance;
-
-    [Header("Player Prefab")]
-    [SerializeField] private GameObject playerPrefab;
-
-    public PlayerController playerController { get; private set; }
+    [Header("Runtime")]
+    public PlayerController PlayerController { get; private set; }
+    public GameObject PlayerGO { get; private set; }    // Physical player object in the scene once instantiated. 
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        EnsurePlayerExists();
-        SceneManager.sceneLoaded += HandleSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDestroy()
     {
         if (Instance == this)
-            SceneManager.sceneLoaded -= HandleSceneLoaded;
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
     }
 
-
-
-    private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void Start()
     {
-        if (playerController == null)
-        {
-            // In case something destroyed it, recreate.
-            EnsurePlayerExists();
-            if (playerController == null) return;
-        }
+        EnsurePlayerExists();
+        BindPlayerComponents();
+    }
 
-        // Menu scene: keep player hidden
-        if (scene.name == "1.MainMenu")
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Re-locate spawn and re-bind after scene loads
+        EnsurePlayerExists();
+        MovePlayerToSpawnPoint();
+        BindPlayerComponents();
+    }
+
+    /// <summary>
+    /// Spawns the player if none exists yet. If one is already present (placed in scene), uses it.
+    /// </summary>
+    public void EnsurePlayerExists()
+    {
+        if (PlayerGO != null) return;
+
+        var existing = FindFirstObjectByType<PlayerController>(FindObjectsInactive.Exclude);
+        if (existing != null)
         {
-            if (playerController)
-            {
-                var rb = playerController.GetComponent<Rigidbody>();
-                if (rb)
-                {
-                    rb.linearVelocity = Vector3.zero;
-                    rb.angularVelocity = Vector3.zero;
-                }
-                playerController.gameObject.SetActive(false);
-            }
+            PlayerGO = existing.gameObject;
+            PlayerController = existing;
             return;
         }
-
-        // Gameplay scene: move, reset-per-level, then show
-        MovePlayerToSpawnPoint();
-        //playerController.ResetForLevel();
-        playerController.gameObject.SetActive(true);
-
-
-    }
-
-
-    private void EnsurePlayerExists()
-    {
-        if (playerController != null) return;
 
         if (playerPrefab == null)
         {
-            Debug.LogError("[PlayerManager] Player prefab not assigned on the manager.");
+            Debug.LogError("[PlayerManager] Player Prefab not assigned.");
             return;
         }
 
-        var go = Instantiate(playerPrefab);
-        playerController = go.GetComponent<PlayerController>();
-        if (playerController == null)
-            Debug.LogWarning("[PlayerManager] Player prefab is missing a PlayerController component.");
-
-        // Start hidden in main menu; shown in gameplay scenes
-        playerController.gameObject.SetActive(false);
+        // Spawn with a neutral position; don't query SpawnPoint here.
+        PlayerGO = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+        PlayerController = PlayerGO.GetComponent<PlayerController>();
+        if (PlayerController == null)
+            Debug.LogError("[PlayerManager] PlayerController missing on prefab.");
     }
 
-
-
-    public void BeginNewRun()
+    /// <summary>
+    /// Attempts to bind PlayerController and notify it of managers.
+    /// </summary>
+    public void BindPlayerComponents()
     {
-        EnsurePlayerExists();
-
-        if (playerController != null)
+        if (PlayerGO == null)
         {
-            playerController.ResetPlayerForLevel();
+            Debug.LogWarning("[PlayerManager] No PlayerGO to bind.");
+            return;
         }
 
+        if (PlayerController == null)
+            PlayerController = PlayerGO.GetComponent<PlayerController>();
+
+        if (PlayerController == null)
+        {
+            Debug.LogError("[PlayerManager] PlayerController missing on PlayerGO.");
+            return;
+        }
+
+        // Provide references from your existing singletons (already DontDestroyOnLoad)
+        var gameManager = GameManager.Instance;
+        var statsManager = StatsManager.Instance;
+        var upgradesManager = UpgradesManager.Instance;
+
+        if (gameManager == null) Debug.LogWarning("[PlayerManager] GameManager.Instance not found.");
+        if (statsManager == null) Debug.LogWarning("[PlayerManager] StatsManager.Instance not found.");
+        if (upgradesManager == null) Debug.LogWarning("[PlayerManager] UpgradesManager.Instance not found.");
+
+        PlayerController.InjectManagers(gameManager, statsManager, upgradesManager);
     }
 
-
+    /// <summary>
+    /// Finds a spawn position and moves the player there.
+    /// </summary>
     public void MovePlayerToSpawnPoint()
     {
-        if (playerController == null) return;
+        if (PlayerGO == null) return;
 
-        var spawn = Object.FindFirstObjectByType<PlayerSpawnPoint>();
-        if (!spawn)
+        var spawn = GameObject.FindWithTag("SpawnPoint") ?? GameObject.Find("SpawnPoint");
+        if (spawn != null)
         {
-            Debug.LogError("[PlayerManager] No PlayerSpawnPoint found in scene.");
-            return;
+            // move the player
+            PlayerGO.transform.SetPositionAndRotation(spawn.transform.position, spawn.transform.rotation);
         }
-
-        var t = playerController.transform;
-        t.SetPositionAndRotation(spawn.transform.position, spawn.transform.rotation);
-
-        var rb = playerController.GetComponent<Rigidbody>();
-        if (rb)
+        else
         {
-            rb.linearVelocity = Vector3.zero;        // <- fixed
-            rb.angularVelocity = Vector3.zero;
+            Debug.LogWarning("[PlayerManager] No SpawnPoint found in this scene.");
         }
     }
 
-
-    public void ResetEnergyBar()
+    private Vector3 GetSpawnPosition()
     {
+        var found = GameObject.Find("SpawnPoint");
+        if (found != null) return found.transform.position;
 
+        Debug.LogWarning("[PlayerManager] No SpawnPoint found in this scene.");
+        return Vector3.zero; // fallback
     }
-    */
+
+
+
+
+
+
+
 
 
 }

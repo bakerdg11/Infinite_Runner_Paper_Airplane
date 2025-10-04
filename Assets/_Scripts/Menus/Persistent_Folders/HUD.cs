@@ -28,15 +28,9 @@ public class HUD : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);   // persists
-        }
-        else
-        {
-            Destroy(gameObject);             // prevent duplicates
-        }
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     // Start is called before the first frame update
@@ -87,6 +81,41 @@ public class HUD : MonoBehaviour
             Debug.LogWarning("PersistentMenuManager not found.");
         }
     }
+
+
+
+    public void SetEnergyRange(float min, float max)
+    {
+        if (!energySlider) return;
+        energySlider.minValue = min;
+        energySlider.maxValue = max;
+        energySlider.wholeNumbers = false;   // make sure it’s smooth
+    }
+
+    public void UpdateEnergy(float value)
+    {
+        if (!energySlider) return;
+        energySlider.value = value;
+    }
+
+
+
+
+    public void DisplayDistanceTravelled()
+    {
+
+    }
+
+    public void DisplayCreditsCollected()
+    {
+
+    }
+
+
+
+
+
+
 
 
 

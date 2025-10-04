@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 2772374308834488364}
   m_Layer: 0
   m_Name: PaperAirplane
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -127,24 +127,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a319f900f85d6a340b52ab02b7800138, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  gameManager: {fileID: 0}
-  statsManager: {fileID: 0}
-  upgradesManager: {fileID: 0}
-  energySlider: {fileID: 0}
   launched: 0
-  gravityActive: 0
+  gravityEnabled: 0
   gravityStrength: 1
-  currentSpeed: 0
+  currentSpeed: 12
   baseSpeed: 12
   boostSpeed: 25
   dashSpeed: 50
   isBoosting: 0
   isDashing: 0
-  energyDepletionRate: 0.5
+  maxEnergy: 100
+  energy: 100
+  energyDepletionRate: 75
   isSteering: 0
-  isHoldingLeft: 0
-  isHoldingRight: 0
-  missileSpawnPoint: {fileID: 0}
+  missileSpawnPoint: {fileID: 5328703327407408498}
   missilePrefab: {fileID: 0}
   laneOffset: 1.5
   lateralMoveSpeed: 3

@@ -8,13 +8,17 @@ public class StatsManager : MonoBehaviour
 
     [Header("Runtime Refs")]
     public PlayerController playerController; // bound each gameplay scene
-    public GameObject startingPoint;          // spawn reference for distance
+    public GameObject spawnPoint;          // spawn reference for distance
+
+    private bool _isGameplayScene;
+    private bool _warnedMissing;      // log only once per scene
+    private float _retryTimer;        // slow rebind attempts
+    private const float RebindInterval = 0.5f; // seconds
 
     [Header("Credits and Ability Points")]
     public int pickupCredits;
     public TMP_Text pickupCreditsText;        // HUD
     public int totalCredits;
-
     public int totalAbilityPoints;
 
     [Header("Distance Travelled")]
@@ -34,6 +38,7 @@ public class StatsManager : MonoBehaviour
     public TMP_Text winMenuPickupCreditsText;
     public TMP_Text winMenuTotalCreditsText;
 
+
     private void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -49,54 +54,83 @@ public class StatsManager : MonoBehaviour
             SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+
+    private void Start()
     {
-        // Reset when entering gameplay scenes; clear when returning to main menu
-        if (scene.name == "1.MainMenu")
+        // First bind attempt (in case you start in a gameplay scene)
+        BindRuntimeRefs();
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        _isGameplayScene = scene.name != "1.MainMenu";
+        _warnedMissing = false;
+        _retryTimer = 0f;
+
+        if (!_isGameplayScene)
         {
+            // Main menu: clear & show 0 once, then do nothing in Update
             playerController = null;
-            startingPoint = null;
+            spawnPoint = null;
             distanceTravelled = 0f;
             if (distanceTravelledText) distanceTravelledText.text = "Distance: 0m";
             return;
         }
 
-        // Bind to the persistent player for gameplay scenes
-        //playerController = PlayerManager.Instance != null ? PlayerManager.Instance.playerController : null;
-
-        // Find the starting/spawn point of this scene (prefer PlayerSpawnPoint)
-        startingPoint = FindStartingPointInScene(scene);
-
-        // Fresh counters every time a gameplay scene loads
-        ResetRunCounters();
-        RefreshHudImmediately();
+        // Gameplay scene: try an initial bind
+        BindRuntimeRefs();
     }
 
-    private void Update()
+
+    void Update()
     {
-        if (playerController != null && startingPoint != null && distanceTravelledText != null)
+        if (!_isGameplayScene) return; // no player/spawn expected on main menu
+
+        // If refs are missing, retry binding at a slow cadence
+        if (playerController == null || spawnPoint == null)
         {
-            distanceTravelled = Vector3.Distance(playerController.transform.position, startingPoint.transform.position);
-            distanceTravelledText.text = "Distance: " + Mathf.FloorToInt(distanceTravelled) + "m";
+            _retryTimer += Time.unscaledDeltaTime;
+            if (_retryTimer >= RebindInterval)
+            {
+                _retryTimer = 0f;
+                BindRuntimeRefs();
+
+                if ((playerController == null || spawnPoint == null) && !_warnedMissing)
+                {
+                    _warnedMissing = true; // only log once per scene
+                    Debug.LogWarning($"[StatsManager] Waiting for player/spawn… (player={(playerController ? "ok" : "null")}, spawn={(spawnPoint ? "ok" : "null")})");
+                }
+            }
+            return;
         }
+
+        // We have both refs — do the distance + HUD update
+        distanceTravelled = Vector3.Distance(playerController.transform.position, spawnPoint.transform.position);
+        if (distanceTravelledText)
+            distanceTravelledText.text = "Distance: " + Mathf.FloorToInt(distanceTravelled) + "m";
     }
 
-    // ───────── Public API ─────────
+    private void BindRuntimeRefs()
+    {
+        playerController = PlayerManager.Instance ? PlayerManager.Instance.PlayerController : null;
+
+        // Spawn by Tag or Name ("SpawnPoint")
+        spawnPoint = GameObject.FindWithTag("SpawnPoint");
+        if (spawnPoint == null) spawnPoint = GameObject.Find("SpawnPoint");
+    }
+
+    public void DetermineDistanceTravelled()
+    {
+        int finalDistance = Mathf.FloorToInt(distanceTravelled);
+        distanceTravelledCredits = Mathf.FloorToInt(finalDistance * 0.01f); // example conversion
+        totalCredits += distanceTravelledCredits;
+    }
 
     public void UpdatePickupCredits(int amount)
     {
         pickupCredits += amount;
         if (pickupCreditsText != null)
             pickupCreditsText.text = "Credits: " + pickupCredits;
-    }
-
-    public void DetermineDistanceTravelled()
-    {
-        if (playerController == null || startingPoint == null) return;
-
-        int finalDistance = Mathf.FloorToInt(distanceTravelled);
-        distanceTravelledCredits = Mathf.FloorToInt(finalDistance * 0.01f); // example conversion
-        totalCredits += distanceTravelledCredits;
     }
 
     public void UpdateTotalCredits()
@@ -124,40 +158,6 @@ public class StatsManager : MonoBehaviour
         if (winMenuTotalCreditsText) winMenuTotalCreditsText.text = "Total Credits: " + totalCredits;
     }
 
-    // ───────── Helpers ─────────
 
-    private void ResetRunCounters()
-    {
-        pickupCredits = 0;
-        distanceTravelled = 0f;
-        distanceTravelledCredits = 0;
 
-        if (pickupCreditsText) pickupCreditsText.text = "Credits: 0";
-        if (distanceTravelledText) distanceTravelledText.text = "Distance: 0m";
-    }
-
-    private void RefreshHudImmediately()
-    {
-        if (pickupCreditsText) pickupCreditsText.text = "Credits: " + pickupCredits;
-        if (distanceTravelledText) distanceTravelledText.text = "Distance: " + Mathf.FloorToInt(distanceTravelled) + "m";
-    }
-
-    private GameObject FindStartingPointInScene(Scene scene)
-    {
-        if (!scene.IsValid() || !scene.isLoaded) return null;
-
-        // Preferred: PlayerSpawnPoint component
-        var spawn = Object.FindFirstObjectByType<PlayerSpawnPoint>();
-        if (spawn) return spawn.gameObject;
-
-        // Fallback: Tag or Name "StartingPoint"
-        var tagged = GameObject.FindGameObjectWithTag("StartingPoint");
-        if (tagged) return tagged;
-
-        var named = GameObject.Find("StartingPoint");
-        if (named) return named;
-
-        Debug.LogWarning("[StatsManager] No PlayerSpawnPoint/'StartingPoint' found.");
-        return null;
-    }
 }

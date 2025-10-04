@@ -1,4 +1,6 @@
+using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -12,6 +14,7 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         SceneManager.sceneLoaded += OnSceneLoaded;
+        EnsureSingleEventSystem();
     }
 
     private void OnDestroy()
@@ -22,12 +25,34 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Safety: make sure time scale is normal whenever a scene loads
         if (Time.timeScale != 1f) Time.timeScale = 1f;
+        EnsureSingleEventSystem();
     }
 
-    /// <summary>Restart the current level scene.</summary>
-    public void RestartLevelScene()
+    private void EnsureSingleEventSystem()
+    {
+        // Use new API
+        var systems = FindObjectsByType<EventSystem>(FindObjectsSortMode.None);
+
+        if (systems.Length <= 1) return;
+
+        // keep the first enabled one; destroy the rest
+        var keeper = systems.FirstOrDefault(es => es.isActiveAndEnabled) ?? systems[0];
+        foreach (var es in systems)
+        {
+            if (es != keeper)
+            {
+                Debug.LogWarning($"[GameManager] Destroying duplicate EventSystem on {es.gameObject.name}");
+                Destroy(es.gameObject);
+            }
+        }
+    }
+
+
+
+
+/// <summary>Restart the current level scene.</summary>
+public void RestartLevelScene()
     {
         // Close menus if you want (optional)
         if (PersistentMenuManager.Instance != null)
@@ -43,21 +68,10 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(active.name, LoadSceneMode.Single);
     }
 
-    // Optional helpers if you want pause/resume here:
-    public void PauseGame()
-    {
-        Time.timeScale = 0f;
-        PersistentMenuManager.Instance?.OpenPauseMenu();
-    }
-
-    public void ResumeGame()
-    {
-        Time.timeScale = 1f;
-        // Your menu manager will unpause when closing the pause menu
-    }
 
 
 
 
+    
 
 }

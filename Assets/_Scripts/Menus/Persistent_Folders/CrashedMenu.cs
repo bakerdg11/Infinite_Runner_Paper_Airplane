@@ -30,25 +30,18 @@ public class CrashedMenu : MonoBehaviour
 
 
 
-public void OnPlayAgainButtonPressed()
+    public void OnPlayAgainButtonPressed()
     {
         gameManager.RestartLevelScene();
-        upgradesManager.GameStartAmmoAmounts();
     }
 
     public void OnBackToMenuButtonPressed()
     {
-        if (PersistentMenuManager.Instance != null)
-        {
-            PersistentMenuManager.Instance.OpenSettings();
-            Debug.Log("Settings Menu Open");
-        }
-        else
-        {
-            Debug.LogWarning("PersistentMenuManager not found.");
-        }
+        // Make sure time resumes normally when switching scenes
+        Time.timeScale = 1f;
 
-        playerController.ResetPlayerForLevel();
+        // Load your main menu scene
+        SceneManager.LoadScene("1.MainMenu");
     }
 
 
@@ -56,19 +49,6 @@ public void OnPlayAgainButtonPressed()
     {
         Application.Quit();
         Debug.Log("Quit game button pressed");
-    }
-
-
-
-
-
-
-    private void BeginGame()
-    {
-        gameManager.RestartLevelScene();
-        upgradesManager.GameStartAmmoAmounts();
-        PersistentMenuManager.Instance.CloseAllMenus();
-        SceneManager.LoadScene("2.Level1", LoadSceneMode.Additive);
     }
 
 

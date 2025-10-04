@@ -40,14 +40,12 @@ public class HoldButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         if (IsHeld) return;
         IsHeld = true;
         onHoldStart.Invoke();
-        Debug.Log($"[HoldButton] DOWN on {name}");
     }
     public void OnPointerUp(PointerEventData e)
     {
         if (!IsHeld) return;
         IsHeld = false;
         onHoldEnd.Invoke();
-        Debug.Log($"[HoldButton] UP on {name}");
     }
 
     public void OnPointerExit(PointerEventData eventData)

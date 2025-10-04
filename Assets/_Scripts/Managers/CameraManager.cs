@@ -26,26 +26,25 @@ public class CameraManager : MonoBehaviour
     void Start()
     {
         currentFollowSpeed = preLaunchFollowSpeed;
-        /*
+        
         // Auto-hook the persistent player if not set in the Inspector
         if (player == null && PlayerManager.Instance != null)
-            player = PlayerManager.Instance.playerController;
+            player = PlayerManager.Instance.PlayerController;
 
         if (player != null && paperAirplane == null)
             paperAirplane = player.transform;
-        */
+        
     }
 
     void LateUpdate()
     {
-        /*
         // One-time fallback in case script order delayed the player hookup
         if ((player == null || paperAirplane == null) && PlayerManager.Instance != null)
         {
-            player = PlayerManager.Instance.playerController;
+            player = PlayerManager.Instance.PlayerController;
             paperAirplane = player != null ? player.transform : null;
         }
-        */
+        
         if (paperAirplane == null || player == null) return;
 
         // Ramp follow speed after launch
