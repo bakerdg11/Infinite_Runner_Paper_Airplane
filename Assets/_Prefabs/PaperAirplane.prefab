@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 523721747467190652}
   - component: {fileID: 5356985504322468994}
   - component: {fileID: 2772374308834488364}
+  - component: {fileID: 4039285220895243780}
   m_Layer: 0
   m_Name: PaperAirplane
   m_TagString: Player
@@ -146,6 +147,24 @@ MonoBehaviour:
   lateralMoveSpeed: 3
   maxBankAngle: 35
   bankLerpSpeed: 9
+--- !u!114 &4039285220895243780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7870461309165224944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 037dc40dffc9b2a4ebb3f24f8ab5d2a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AbilitySystem
+  loadout:
+  - {fileID: 11400000, guid: 3c4693dd597ce6b47ac811fa3e27d2b7, type: 2}
+  - {fileID: 11400000, guid: 8322d6dbcc0eb174cb053b29333b287d, type: 2}
+  - {fileID: 11400000, guid: 782ac53d84b2da2458e904e0d21ee73f, type: 2}
+  - {fileID: 11400000, guid: 6d24a8257ab33064089e8a40aaa69b1f, type: 2}
+  - {fileID: 11400000, guid: 3caff3776cd5c8545947371d08efff5d, type: 2}
 --- !u!1001 &9069424876217849605
 PrefabInstance:
   m_ObjectHideFlags: 0

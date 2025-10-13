@@ -3,22 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
+using System;
+
+
+[Serializable]
+public struct AbilityCounter
+{
+    public string abilityId;
+    public TMP_Text label; // the tiny number in the top-right of the button
+}
+
+
 
 public class HUD : MonoBehaviour
 {
     public static HUD Instance;
 
-
+    [Header("References")]
     private PlayerController playerController;
     public GameManager gameManager;
     public UpgradesManager upgradesManager;
+    [SerializeField] private AbilitySystem abilitySystem;
 
+    [Header("General")]
+    public Button pauseButton;
     public Slider energySlider;
+    public TMP_Text runDistance;
+    public TMP_Text runCurrency;
 
     public Button steerLeftButton;
     public Button steerRightButton;
 
-    public Button pauseButton;
+    [Header("Abilities")]
     public Button pauseEnergyDepletion;
     public Button boost;
     public Button invincible;
@@ -26,33 +43,47 @@ public class HUD : MonoBehaviour
     public Button[] missileLaunch;
 
 
+    [Header("Ability Counters")]
+    [SerializeField] private List<AbilityCounter> counters;
+
+    private Dictionary<string, TMP_Text> _map;
+
+
     void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        _map = new(StringComparer.OrdinalIgnoreCase);
+        foreach (var c in counters)
+        {
+            if (!string.IsNullOrEmpty(c.abilityId) && c.label != null)
+                _map[c.abilityId] = c.label;
+        }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        /*
-        pauseButton.onClick.AddListener(OnPauseButtonPressed);
-        pauseEnergyDepletion.onClick.AddListener(OnPauseEnergyDepletionButtonPressed);
-        boost.onClick.AddListener(OnBoostButtonPressed);
-        invincible.onClick.AddListener(OnInvincibleButtonPressed);
-        dash.onClick.AddListener(OnDashButtonPressed);
+        dash.onClick.AddListener(OnPressDash);
+        boost.onClick.AddListener(OnPressBoost);
+        invincible.onClick.AddListener(OnPressInvincible);
+        pauseEnergyDepletion.onClick.AddListener(OnPressPauseEnergy);
 
         foreach (Button btn in missileLaunch)
         {
-            btn.onClick.AddListener(OnMissileLaunchButtonPressed);
-        }*/
+            btn.onClick.AddListener(OnPressMissile);
+        }
+
+        pauseButton.onClick.AddListener(OnPauseButtonPressed);
     }
 
 
     void OnEnable()
     {
         StartCoroutine(FindAirplaneWhenReady());
+        EnsureAbilitySystem();
     }
 
     private IEnumerator FindAirplaneWhenReady()
@@ -83,7 +114,7 @@ public class HUD : MonoBehaviour
     }
 
 
-
+    // ----------------------------------------------------------------Energy Slider--------------------
     public void SetEnergyRange(float min, float max)
     {
         if (!energySlider) return;
@@ -100,23 +131,88 @@ public class HUD : MonoBehaviour
 
 
 
-
-    public void DisplayDistanceTravelled()
+    // ----------------------------------------------------------------Distance Travelled--------------------
+    public void DisplayDistanceTravelled(int meters)
     {
-
-    }
-
-    public void DisplayCreditsCollected()
-    {
-
+        if (!runDistance) return;
+        runDistance.text = $"Distance: {meters}m";
     }
 
 
 
+    // ----------------------------------------------------------------Credits Collected--------------------
+    public void UpdatePickupCredits(int creditsCollected)
+    {
+        if (!runCurrency) return;
+        runCurrency.text = $"Credits: {creditsCollected}";
+    }
+
+    public void ResetPickupCredits()
+    {
+        if (runCurrency == null) return;
+        runCurrency.text = "Credits: 0";
+    }
 
 
 
+    // ---------------------------------------------------------------- Buttons and activating abilities ----
+    private bool EnsureAbilitySystem()
+    {
+        if (abilitySystem != null) return true;
 
+        // Try from PlayerManager (best, since your player is managed there)
+        var pm = PlayerManager.Instance;
+        if (pm != null && pm.PlayerGO != null)
+            abilitySystem = pm.PlayerGO.GetComponent<AbilitySystem>();
+
+        // Fallbacks
+        if (abilitySystem == null)
+            abilitySystem = FindFirstObjectByType<AbilitySystem>(FindObjectsInactive.Exclude);
+
+        if (abilitySystem == null)
+            Debug.LogWarning("[HUD] AbilitySystem not found. Is the player spawned yet?");
+
+        return abilitySystem != null;
+    }
+
+    public void SetAbilityAmmo(string abilityId, int count)
+    {
+        if (_map != null && _map.TryGetValue(abilityId, out var label) && label != null)
+            label.text = count.ToString();
+    }
+
+    public void OnPressDash()
+    {
+        if (!EnsureAbilitySystem()) return;      // guard against null
+        abilitySystem.TryActivate("dash");
+    }
+
+    public void OnPressBoost()
+    {
+        if (!EnsureAbilitySystem()) return;      // guard against null
+        abilitySystem.TryActivate("boost");
+    }
+
+    public void OnPressInvincible()
+    {
+        if (!EnsureAbilitySystem()) return;      // guard against null
+        abilitySystem.TryActivate("invincible");
+    }
+
+    public void OnPressPauseEnergy()
+    {
+        if (!EnsureAbilitySystem()) return;      // guard against null
+        abilitySystem.TryActivate("pauseenergy");
+    }
+
+    public void OnPressMissile()
+    {
+        if (!EnsureAbilitySystem()) return;      // guard against null
+        abilitySystem.TryActivate("missile");
+    }
+
+
+}
 
 
     /*
@@ -214,4 +310,3 @@ public class HUD : MonoBehaviour
     }
 
     */
-}

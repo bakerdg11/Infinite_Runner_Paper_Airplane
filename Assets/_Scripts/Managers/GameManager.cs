@@ -66,6 +66,9 @@ public void RestartLevelScene()
         var active = SceneManager.GetActiveScene();
         if (active.IsValid())
             SceneManager.LoadScene(active.name, LoadSceneMode.Single);
+
+        HUD.Instance.ResetPickupCredits();
+        StatsManager.Instance.ResetPickupCredits();
     }
 
 

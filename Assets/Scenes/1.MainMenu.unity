@@ -4878,6 +4878,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HUD
   gameManager: {fileID: 1637684798}
   upgradesManager: {fileID: 1711139025}
+  runDistance: {fileID: 155347432}
+  runCurrency: {fileID: 2119591241}
   energySlider: {fileID: 1522429297}
   steerLeftButton: {fileID: 265281283}
   steerRightButton: {fileID: 442171143}
@@ -9438,8 +9440,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CrashedMenu
   gameManager: {fileID: 1637684798}
-  upgradesManager: {fileID: 1711139025}
-  playerController: {fileID: 2772374308834488364, guid: 3ec6ecf5c1e2ad14cb989be185d185eb, type: 3}
+  distanceTravelledText: {fileID: 613448109}
+  distanceCreditsText: {fileID: 767530297}
+  pickupCreditsText: {fileID: 772639046}
+  totalCreditsText: {fileID: 707516211}
   playAgainButton: {fileID: 1742277638}
   backToMenuButton: {fileID: 1180299238}
   quitGameButton: {fileID: 1630319051}
@@ -16374,14 +16378,7 @@ MonoBehaviour:
   distanceTravelled: 0
   distanceTravelledText: {fileID: 155347432}
   distanceTravelledCredits: 0
-  crashedMenuDistanceTravelledText: {fileID: 613448109}
-  crashedMenuDistanceCreditsText: {fileID: 767530297}
-  crashedMenuPickupCreditsText: {fileID: 772639046}
-  crashedMenuTotalCreditsText: {fileID: 707516211}
-  winMenuDistanceTravelledText: {fileID: 1163519748}
-  winMenuDistanceCreditsText: {fileID: 1375965214}
-  winMenuPickupCreditsText: {fileID: 916393274}
-  winMenuTotalCreditsText: {fileID: 529452779}
+  hudUpdateInterval: 0.1
 --- !u!4 &1382638162
 Transform:
   m_ObjectHideFlags: 0
@@ -19464,6 +19461,7 @@ GameObject:
   - component: {fileID: 1660010171}
   - component: {fileID: 1660010173}
   - component: {fileID: 1660010172}
+  - component: {fileID: 1660010174}
   m_Layer: 5
   m_Name: Panel_Win
   m_TagString: Untagged
@@ -19535,6 +19533,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1660010170}
   m_CullTransparentMesh: 1
+--- !u!114 &1660010174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660010170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a05a2081fac93b14096a9b329c7e72aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WinMenu
+  distanceTravelledText: {fileID: 1163519748}
+  distanceCreditsText: {fileID: 1375965214}
+  pickupCreditsText: {fileID: 916393274}
+  totalCreditsText: {fileID: 529452779}
 --- !u!1 &1660945376
 GameObject:
   m_ObjectHideFlags: 0

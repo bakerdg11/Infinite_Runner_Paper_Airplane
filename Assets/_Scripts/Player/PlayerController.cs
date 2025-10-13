@@ -159,7 +159,7 @@ public class PlayerController : MonoBehaviour
 
         statsManager.DetermineDistanceTravelled();
         statsManager.UpdateTotalCredits();
-        statsManager.UpdateCrashedMenuStats();
+        statsManager.FinalizeRun();
 
         upgradesManager.GameEndAmmoAmmounts();
         PersistentMenuManager.Instance.OpenCrashMenu();
@@ -236,12 +236,28 @@ public class PlayerController : MonoBehaviour
 
 
     // ----------------- BOOST ABILITY ----------------
-    public void AirplaneBoost() { isBoosting = true; UpdateCurrentSpeed(); }
-    public void AirplaneBoostEnd() { isBoosting = false; UpdateCurrentSpeed(); }
+    public void AirplaneBoost()
+    { 
+        isBoosting = true; 
+        UpdateCurrentSpeed(); 
+    }
+    public void AirplaneBoostEnd()
+    { 
+        isBoosting = false; 
+        UpdateCurrentSpeed(); 
+    }
 
     // ------------------ DASH ABILITY -----------------
-    public void AirplaneDash() { isDashing = true; UpdateCurrentSpeed(); }
-    public void AirplaneDashEnd() { isDashing = false; UpdateCurrentSpeed(); }
+    public void AirplaneDash() 
+    { 
+        isDashing = true; 
+        UpdateCurrentSpeed(); 
+    }
+    public void AirplaneDashEnd() 
+    { 
+        isDashing = false; 
+        UpdateCurrentSpeed();
+    }
 
     private void UpdateCurrentSpeed()
     {

@@ -26,17 +26,15 @@ public class StatsManager : MonoBehaviour
     public TMP_Text distanceTravelledText;    // HUD
     public int distanceTravelledCredits;      // Win/Crashed Menu
 
-    [Header("Crashed Menu Results Texts")]
-    public TMP_Text crashedMenuDistanceTravelledText;
-    public TMP_Text crashedMenuDistanceCreditsText;
-    public TMP_Text crashedMenuPickupCreditsText;
-    public TMP_Text crashedMenuTotalCreditsText;
+    private int _lastDistanceShown = -1;
+    private float _hudTimer = 0f;
+    [SerializeField] private float hudUpdateInterval = 0.10f; // seconds (optional throttle)
 
-    [Header("Win Menu Results Texts")]
-    public TMP_Text winMenuDistanceTravelledText;
-    public TMP_Text winMenuDistanceCreditsText;
-    public TMP_Text winMenuPickupCreditsText;
-    public TMP_Text winMenuTotalCreditsText;
+
+    public int DistanceMeters => Mathf.FloorToInt(distanceTravelled);
+    public int PickupCreditsThisRun => pickupCredits;
+    public int TotalCreditsAllTime => totalCredits;
+    public int DistanceTravelledCredits => distanceTravelledCredits;
 
 
     private void Awake()
@@ -106,8 +104,25 @@ public class StatsManager : MonoBehaviour
 
         // We have both refs — do the distance + HUD update
         distanceTravelled = Vector3.Distance(playerController.transform.position, spawnPoint.transform.position);
-        if (distanceTravelledText)
-            distanceTravelledText.text = "Distance: " + Mathf.FloorToInt(distanceTravelled) + "m";
+        int meters = Mathf.FloorToInt(distanceTravelled);
+
+        // --- push to HUD only when needed ---
+        _hudTimer += Time.unscaledDeltaTime;
+
+        // Option A: update only when the shown integer changes (zero alloc most frames)
+        if (meters != _lastDistanceShown)
+        {
+            _lastDistanceShown = meters;
+            HUD.Instance?.DisplayDistanceTravelled(meters);
+            _hudTimer = 0f; // reset timer if you also use throttle
+        }
+
+        // Option B (optional): also force an update every N seconds even if unchanged
+        else if (_hudTimer >= hudUpdateInterval)
+        {
+            _hudTimer = 0f;
+            HUD.Instance?.DisplayDistanceTravelled(meters);
+        }
     }
 
     private void BindRuntimeRefs()
@@ -119,6 +134,10 @@ public class StatsManager : MonoBehaviour
         if (spawnPoint == null) spawnPoint = GameObject.Find("SpawnPoint");
     }
 
+
+
+
+    // ------------------------------------------------------------Distance Travelled--------------------------
     public void DetermineDistanceTravelled()
     {
         int finalDistance = Mathf.FloorToInt(distanceTravelled);
@@ -126,37 +145,51 @@ public class StatsManager : MonoBehaviour
         totalCredits += distanceTravelledCredits;
     }
 
+
+    public void ResetDistanceTravelled()
+    {
+        distanceTravelled = 0f;
+        HUD.Instance?.DisplayDistanceTravelled(0);
+    }
+
+
+
+
+
+    // ------------------------------------------------------------Credits-------------------------------------
     public void UpdatePickupCredits(int amount)
     {
         pickupCredits += amount;
-        if (pickupCreditsText != null)
-            pickupCreditsText.text = "Credits: " + pickupCredits;
+        HUD.Instance?.UpdatePickupCredits(pickupCredits);
     }
+
+    public void ResetPickupCredits()
+    {
+        pickupCredits = 0;
+    }
+
 
     public void UpdateTotalCredits()
     {
         totalCredits += pickupCredits;
     }
 
-    public void UpdateCrashedMenuStats()
-    {
-        int finalDistance = Mathf.FloorToInt(distanceTravelled);
 
-        if (crashedMenuDistanceTravelledText) crashedMenuDistanceTravelledText.text = "Distance Travelled: " + finalDistance + "m";
-        if (crashedMenuDistanceCreditsText) crashedMenuDistanceCreditsText.text = "Travelled Credits: " + distanceTravelledCredits;
-        if (crashedMenuPickupCreditsText) crashedMenuPickupCreditsText.text = "Credits Collected: " + pickupCredits;
-        if (crashedMenuTotalCreditsText) crashedMenuTotalCreditsText.text = "Total Credits: " + totalCredits;
+
+
+
+
+    // ------------------------------------------------------------Update Win/Loss Menus-------------------------
+    public void FinalizeRun()
+    {
+        // credits from distance
+        int finalDistance = Mathf.FloorToInt(distanceTravelled);
+        distanceTravelledCredits = Mathf.FloorToInt(finalDistance * 0.01f); // your conversion
+                                                                            // add this run's pickup credits to total when run ends
+        totalCredits += distanceTravelledCredits;   // distance-based
+        totalCredits += pickupCredits;              // pickups
     }
 
-    public void UpdateWinMenuStats()
-    {
-        int finalDistance = Mathf.FloorToInt(distanceTravelled);
-
-        if (winMenuDistanceTravelledText) winMenuDistanceTravelledText.text = "Distance Travelled: " + finalDistance + "m";
-        if (winMenuDistanceCreditsText) winMenuDistanceCreditsText.text = "Travelled Credits: " + distanceTravelledCredits;
-        if (winMenuPickupCreditsText) winMenuPickupCreditsText.text = "Credits Collected: " + pickupCredits;
-        if (winMenuTotalCreditsText) winMenuTotalCreditsText.text = "Total Credits: " + totalCredits;
-    }
 
 
 
