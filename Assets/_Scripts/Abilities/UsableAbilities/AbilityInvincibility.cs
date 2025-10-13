@@ -7,11 +7,11 @@ public class AbilityInvincibility : BaseAbility
 
     public override void OnActivate(in AbilityContext ctx, AbilityInstance inst)
     {
-        if (ctx.Upgrades != null) ctx.Upgrades.invincibleEnabled = true;
+        ctx.Ability.PlayerIsInvincible(true);
     }
 
     public override void OnDeactivate(in AbilityContext ctx, AbilityInstance inst, bool cancelled)
     {
-        if (ctx.Upgrades != null) ctx.Upgrades.invincibleEnabled = false;
+        ctx.Ability.PlayerIsInvincible(false);
     }
 }

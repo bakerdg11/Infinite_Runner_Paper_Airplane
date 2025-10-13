@@ -4878,19 +4878,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HUD
   gameManager: {fileID: 1637684798}
   upgradesManager: {fileID: 1711139025}
+  abilitySystem: {fileID: 0}
+  pauseButton: {fileID: 2052060061}
+  energySlider: {fileID: 1522429297}
   runDistance: {fileID: 155347432}
   runCurrency: {fileID: 2119591241}
-  energySlider: {fileID: 1522429297}
   steerLeftButton: {fileID: 265281283}
   steerRightButton: {fileID: 442171143}
-  pauseButton: {fileID: 2052060061}
-  pauseEnergyDepletion: {fileID: 1102201342}
+  dash: {fileID: 963010774}
   boost: {fileID: 114224120}
   invincible: {fileID: 937718427}
-  dash: {fileID: 963010774}
+  pauseEnergyDepletion: {fileID: 1102201342}
   missileLaunch:
   - {fileID: 934927815}
   - {fileID: 1852777701}
+  counters: []
 --- !u!1 &430750363
 GameObject:
   m_ObjectHideFlags: 0
@@ -8520,10 +8522,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec74f5f02cfa1214596f034f58881f0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeStatsMenu
+  playerController: {fileID: 2772374308834488364, guid: 3ec6ecf5c1e2ad14cb989be185d185eb, type: 3}
+  gameManager: {fileID: 1637684798}
+  statsManager: {fileID: 1382638161}
   upgradesManager: {fileID: 1711139025}
   upgradeEnergyDepletionRateButton: {fileID: 81979283}
   upgradeLaneChangeSpeedButton: {fileID: 1937000366}
   upgradesBackButton: {fileID: 1725482087}
+  statsMenuCredits: {fileID: 647267406}
+  edrCurrentLevel: {fileID: 983572590}
+  edrMaxLevel: {fileID: 568079469}
+  lcsCurrentLevel: {fileID: 1153009220}
+  lcsMaxLevel: {fileID: 129196913}
 --- !u!1 &750485140
 GameObject:
   m_ObjectHideFlags: 0
@@ -9361,7 +9371,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &784204409
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9782,7 +9792,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &832756624
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9879,9 +9889,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1d2088708359e74394d8b7461145d44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeAbilitiesMenu
+  playerController: {fileID: 2772374308834488364, guid: 3ec6ecf5c1e2ad14cb989be185d185eb, type: 3}
+  gameManager: {fileID: 1637684798}
+  statsManager: {fileID: 1382638161}
   upgradesManager: {fileID: 1711139025}
-  upgradePEDLButton: {fileID: 1136461971}
-  upgradePEDAButton: {fileID: 281859417}
+  abilityMenuPoints: {fileID: 1064368232}
+  pedLengthCurrentLevel: {fileID: 1497343049}
+  pedLengthMaxLevel: {fileID: 1928001365}
+  pedAmmoCurrentLevel: {fileID: 300464631}
+  pedAmmoMaxLevel: {fileID: 1758821030}
+  boostLengthCurrentLevel: {fileID: 1150757793}
+  boostLengthMaxLevel: {fileID: 1169711364}
+  boostAmmoCurrentLevel: {fileID: 1421287787}
+  boostAmmoMaxLevel: {fileID: 441375642}
+  invincibilityLengthCurrentLevel: {fileID: 1428382952}
+  invincibilityLengthMaxLevel: {fileID: 1270586335}
+  invincibilityAmmoCurrentLevel: {fileID: 1597412718}
+  invincibilityAmmoMaxLevel: {fileID: 430750365}
+  dashAmmoCurrentLevel: {fileID: 1228591900}
+  dashAmmoMaxLevel: {fileID: 1936929156}
+  missileAmmoCurrentLevel: {fileID: 1056291304}
+  missileAmmoMaxLevel: {fileID: 1834845863}
+  upgradePedLengthButton: {fileID: 1136461971}
+  upgradePedAmmoButton: {fileID: 281859417}
   upgradeBoostLengthButton: {fileID: 1615551732}
   upgradeBoostAmmoButton: {fileID: 155663178}
   upgradeInvincibilityLengthButton: {fileID: 1132984375}
@@ -15536,7 +15566,7 @@ GameObject:
   - component: {fileID: 1270586336}
   - component: {fileID: 1270586335}
   m_Layer: 5
-  m_Name: Text_InvincibilityMaxLevel
+  m_Name: Text_InvincibilityLengthMaxLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17058,7 +17088,7 @@ GameObject:
   - component: {fileID: 1428382953}
   - component: {fileID: 1428382952}
   m_Layer: 5
-  m_Name: Text_InvincibilityCurrentLevel
+  m_Name: Text_InvincibilityLengthCurrentLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20226,87 +20256,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2f55a7d821966148aacbcf3382c2fc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradesManager
+  playerController: {fileID: 2772374308834488364, guid: 3ec6ecf5c1e2ad14cb989be185d185eb, type: 3}
   gameManager: {fileID: 1637684798}
   statsManager: {fileID: 1382638161}
-  playerController: {fileID: 2772374308834488364, guid: 3ec6ecf5c1e2ad14cb989be185d185eb, type: 3}
-  energyPauseDuration: 2
-  energyDepletionPaused: 0
-  energyPauseSlider: {fileID: 165657022}
-  boostDuration: 2
-  boostEnabled: 0
-  boostSlider: {fileID: 926147446}
-  invincibleDuration: 2
-  invincibleEnabled: 0
-  invincibleSlider: {fileID: 576970229}
-  dashDuration: 0.3
-  dashEnabled: 0
-  dashSlider: {fileID: 616834367}
-  missileCooldown: 0.5
-  missileFired: 0
-  missileSliderLeft: {fileID: 106095627}
-  missileSliderRight: {fileID: 1624435727}
-  pauseEnergyAmmo: 1
-  boostAmmo: 0
-  invincibilityAmmo: 0
-  dashAmmo: 1
-  missileAmmo: 0
-  tempPauseEnergyAmmo: 0
-  tempBoostAmmo: 0
-  tempInvincibilityAmmo: 0
-  tempDashAmmo: 0
-  tempMissileAmmo: 0
-  distanceTravelledText: {fileID: 155347432}
-  pickupCreditsText: {fileID: 2119591241}
-  pauseEnergyAmmoText: {fileID: 1660945378}
-  boostAmmoText: {fileID: 1122575183}
-  invincibilityAmmaText: {fileID: 1181940003}
-  dashAmmoText: {fileID: 1961678393}
-  leftMissileAmmoText: {fileID: 1749086310}
-  rightMissileAmmoText: {fileID: 496183275}
-  upgradesMenuTotalCreditsText: {fileID: 0}
-  upgradesMenuTotalAbilityPointsText: {fileID: 0}
-  upgradesStatsMenuTotalCreditsText: {fileID: 0}
-  upgradesAbilitiesMenuTotalAbilityPointsText: {fileID: 0}
-  edrCurrent: {fileID: 983572590}
-  edrMax: {fileID: 568079469}
-  lcsCurrent: {fileID: 1153009220}
-  lcsMax: {fileID: 129196913}
-  pedLengthCurrent: {fileID: 1497343049}
-  pedLengthMax: {fileID: 1928001365}
-  pedAmmoCurrent: {fileID: 300464631}
-  pedAmmoMax: {fileID: 1758821030}
-  boostLengthCurrent: {fileID: 1150757793}
-  boostLengthMax: {fileID: 1169711364}
-  boostAmmoCurrent: {fileID: 1421287787}
-  boostAmmoMax: {fileID: 441375642}
-  invincibilityLengthCurrent: {fileID: 1428382952}
-  invincibilityLengthMax: {fileID: 1270586335}
-  invincibilityAmmoCurrent: {fileID: 1597412718}
-  invincibilityAmmoMax: {fileID: 430750365}
-  dashAmmoCurrent: {fileID: 1228591900}
-  dashAmmoMax: {fileID: 1936929156}
-  missileAmmoCurrent: {fileID: 1056291304}
-  missileAmmoMax: {fileID: 1834845863}
-  edrCurrentLevel: 0
-  edrMaxLevel: 0
-  lcsCurrentLevel: 0
-  lcsMaxLevel: 0
-  pedLengthCurrentLevel: 0
-  pedLengthMaxLevel: 0
-  pedAmmoCurrentLevel: 0
-  pedAmmoMaxLevel: 0
-  boostLengthCurrentLevel: 0
-  boostLengthMaxLevel: 0
-  boostAmmoCurrentLevel: 0
-  boostAmmoMaxLevel: 0
-  invincibilityLengthCurrentLevel: 0
-  invincibilityLengthMaxLevel: 0
-  invincibilityAmmoCurrentLevel: 0
-  invincibilityAmmoMaxLevel: 0
-  dashAmmoCurrentLevel: 0
-  dashAmmoMaxLevel: 0
-  missileAmmoCurrentLevel: 0
-  missileAmmoMaxLevel: 0
 --- !u!1 &1725482086
 GameObject:
   m_ObjectHideFlags: 0
@@ -23030,10 +22982,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradesMenu
   gameManager: {fileID: 1637684798}
+  upgradesManager: {fileID: 1711139025}
   buyAbilityPointButton: {fileID: 582366102}
   upgradeStatsButton: {fileID: 1211637799}
   upgradeAbilitiesButton: {fileID: 1423227706}
   upgradesBackButton: {fileID: 2013348030}
+  upgradeMenuCredits: {fileID: 0}
+  upgradeMenuAbilityPoints: {fileID: 0}
 --- !u!1 &1928001363
 GameObject:
   m_ObjectHideFlags: 0

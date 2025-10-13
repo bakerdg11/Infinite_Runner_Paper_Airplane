@@ -37,8 +37,6 @@ public class CrashedMenu : MonoBehaviour
 
     private void PopulateFromStats()
     {
-        StatsManager.Instance?.FinalizeRun();
-
         if (distanceTravelledText) distanceTravelledText.text = $"Distance Travelled: {StatsManager.Instance.DistanceMeters}m";
         if (distanceCreditsText) distanceCreditsText.text = $"Travelled Credits: {StatsManager.Instance.DistanceTravelledCredits}";
         if (pickupCreditsText) pickupCreditsText.text = $"Credits Collected: {StatsManager.Instance.PickupCreditsThisRun}";

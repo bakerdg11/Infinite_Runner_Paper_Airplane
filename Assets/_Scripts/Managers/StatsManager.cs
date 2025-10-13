@@ -138,13 +138,6 @@ public class StatsManager : MonoBehaviour
 
 
     // ------------------------------------------------------------Distance Travelled--------------------------
-    public void DetermineDistanceTravelled()
-    {
-        int finalDistance = Mathf.FloorToInt(distanceTravelled);
-        distanceTravelledCredits = Mathf.FloorToInt(finalDistance * 0.01f); // example conversion
-        totalCredits += distanceTravelledCredits;
-    }
-
 
     public void ResetDistanceTravelled()
     {
@@ -167,14 +160,6 @@ public class StatsManager : MonoBehaviour
     {
         pickupCredits = 0;
     }
-
-
-    public void UpdateTotalCredits()
-    {
-        totalCredits += pickupCredits;
-    }
-
-
 
 
 

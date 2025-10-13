@@ -36,10 +36,10 @@ public class HUD : MonoBehaviour
     public Button steerRightButton;
 
     [Header("Abilities")]
-    public Button pauseEnergyDepletion;
+    public Button dash;
     public Button boost;
     public Button invincible;
-    public Button dash;
+    public Button pauseEnergyDepletion;
     public Button[] missileLaunch;
 
 

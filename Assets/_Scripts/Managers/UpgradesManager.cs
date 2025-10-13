@@ -9,10 +9,53 @@ public class UpgradesManager : MonoBehaviour
 {
     public static UpgradesManager Instance { get; private set; }
 
+    public PlayerController playerController;
     public GameManager gameManager;
     public StatsManager statsManager;
-    public PlayerController playerController;
 
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        playerController = FindFirstObjectByType<PlayerController>();
+
+        if (playerController == null)
+        {
+            Debug.LogWarning("PaperplayerController not found in scene " + scene.name);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+    /*
 
     // ------------------------------------ABILITIES ---------------------------------------
     [Header("Pause Energy Depletion Variables")]
@@ -147,13 +190,13 @@ public class UpgradesManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        /*playerController = FindFirstObjectByType<PlayerController>();
+        playerController = FindFirstObjectByType<PlayerController>();
 
         if (playerController == null)
         {
             Debug.LogWarning("PaperplayerController not found in scene " + scene.name);
         }
-        */
+       
 
 
 
@@ -255,23 +298,6 @@ public class UpgradesManager : MonoBehaviour
             rightMissileAmmoText.text = missileAmmo.ToString();
     }
 
-    public void GameStartAmmoAmounts()
-    {
-        tempPauseEnergyAmmo = pauseEnergyAmmo;
-        tempBoostAmmo = boostAmmo;
-        tempInvincibilityAmmo = invincibilityAmmo;
-        tempDashAmmo = dashAmmo;
-        tempMissileAmmo = missileAmmo;
-    }
-
-    public void GameEndAmmoAmmounts()
-    {
-        pauseEnergyAmmo = tempPauseEnergyAmmo;
-        boostAmmo = tempBoostAmmo;
-        invincibilityAmmo = tempInvincibilityAmmo;
-        dashAmmo = tempDashAmmo;
-        missileAmmo = tempMissileAmmo;
-    }
 
 
 
@@ -724,4 +750,4 @@ public class UpgradesManager : MonoBehaviour
 
 
 
-}
+}   */

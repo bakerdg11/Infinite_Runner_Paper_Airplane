@@ -1,4 +1,3 @@
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 public readonly struct AbilityContext
@@ -6,12 +5,14 @@ public readonly struct AbilityContext
     public readonly PlayerController Player;
     public readonly StatsManager Stats;
     public readonly UpgradesManager Upgrades;
+    public readonly AbilitySystem Ability;
 
-    public AbilityContext(PlayerController p, StatsManager s, UpgradesManager u)
+    public AbilityContext(PlayerController p, StatsManager s, UpgradesManager u, AbilitySystem a)
     {
         Player = p;
         Stats = s;
         Upgrades = u;
+        Ability = a;
     }
 }
 

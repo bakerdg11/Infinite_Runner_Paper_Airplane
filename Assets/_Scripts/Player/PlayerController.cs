@@ -6,9 +6,10 @@ public class PlayerController : MonoBehaviour
     public static PlayerController Instance;
     private Rigidbody rb;
 
-    GameManager gameManager;
-    UpgradesManager upgradesManager;
-    StatsManager statsManager;
+    public GameManager gameManager;
+    public StatsManager statsManager;
+    public UpgradesManager upgradesManager;
+    public AbilitySystem abilitySystem;
 
     [Header("Physics")]
     public bool launched = false;
@@ -45,6 +46,8 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         Instance = this;
+
+        abilitySystem = GetComponent<AbilitySystem>(); // player has this component
     }
 
     public void InjectManagers(GameManager gm, StatsManager sm, UpgradesManager um)
@@ -121,7 +124,7 @@ public class PlayerController : MonoBehaviour
         // 6) Energy depletion while steering
         if (isSteering)
         {
-            bool pauseDepletion = (upgradesManager != null && upgradesManager.energyDepletionPaused);
+            bool pauseDepletion = (abilitySystem != null && abilitySystem.energyDepletionPaused);
             if (!pauseDepletion)
             {
                 energy = Mathf.Max(0f, energy - energyDepletionRate * Time.deltaTime);
@@ -139,12 +142,26 @@ public class PlayerController : MonoBehaviour
         {
             CrashConditions();
         }
+    }
 
+
+    private void OnTriggerEnter(Collider other)
+    {
         if (other.gameObject.CompareTag("Obstacle"))
         {
-            CrashConditions();
+            bool dashing = (abilitySystem != null && abilitySystem.isDashing);
+            bool invincible = (abilitySystem != null && abilitySystem.isInvincible);
+            if (dashing || invincible)
+            {
+                Destroy(other.gameObject);
+            }
+            else
+            {
+                CrashConditions();
+            }
         }
     }
+
 
 
 
@@ -157,11 +174,8 @@ public class PlayerController : MonoBehaviour
         DisableGravity();
         NotLaunched();
 
-        statsManager.DetermineDistanceTravelled();
-        statsManager.UpdateTotalCredits();
         statsManager.FinalizeRun();
 
-        upgradesManager.GameEndAmmoAmmounts();
         PersistentMenuManager.Instance.OpenCrashMenu();
     }
 
@@ -225,17 +239,11 @@ public class PlayerController : MonoBehaviour
 
 
 
-    public void FireMissile()
-    {
-        if (missilePrefab != null && missileSpawnPoint != null)
-        {
-            Instantiate(missilePrefab, missileSpawnPoint.position, missileSpawnPoint.rotation);
-        }
-    }
 
 
 
-    // ----------------- BOOST ABILITY ----------------
+
+    // ------------------------------------------------------------------- BOOST ABILITY ----------------
     public void AirplaneBoost()
     { 
         isBoosting = true; 
@@ -247,7 +255,7 @@ public class PlayerController : MonoBehaviour
         UpdateCurrentSpeed(); 
     }
 
-    // ------------------ DASH ABILITY -----------------
+    // -------------------------------------------------------------------- DASH ABILITY -----------------
     public void AirplaneDash() 
     { 
         isDashing = true; 
@@ -278,6 +286,22 @@ public class PlayerController : MonoBehaviour
         Debug.Log($"[Speed Update] Dashing: {isDashing}, Boosting: {isBoosting}, Speed: {currentSpeed}");
     }
 
+    // -------------------------------------------------------------------- INVINCIBILITY ABILITY -----------------
+
+
+
+    // -------------------------------------------------------------------- PAUSE ENERGY DEPLETION ABILITY --------
+
+
+
+    // -------------------------------------------------------------------- MISSILE ABILITY -----------------------
+    public void FireMissile()
+    {
+        if (missilePrefab != null && missileSpawnPoint != null)
+        {
+            Instantiate(missilePrefab, missileSpawnPoint.position, missileSpawnPoint.rotation);
+        }
+    }
 
 
 }

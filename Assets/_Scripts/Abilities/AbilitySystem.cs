@@ -10,6 +10,12 @@ public class AbilitySystem : MonoBehaviour
     private PlayerController _player;
     private StatsManager _stats;
     private UpgradesManager _upgrades;
+    private AbilitySystem _abilities;
+
+    [Header("Ability Bools")]
+    public bool isDashing {  get; private set; }
+    public bool isInvincible { get; private set; }
+    public bool energyDepletionPaused { get; private set; }
 
     // Optional event so HUD can subscribe; or we can call HUD directly
     public event Action<string, int> OnAmmoChanged;  // (abilityId, chargesLeft)
@@ -47,7 +53,7 @@ public class AbilitySystem : MonoBehaviour
         }
     }
 
-    private AbilityContext BuildCtx() => new AbilityContext(_player, _stats, _upgrades);
+    private AbilityContext BuildCtx() => new AbilityContext(_player, _stats, _upgrades, this);
 
     public bool TryActivate(string abilityId)
     {
@@ -117,4 +123,32 @@ public class AbilitySystem : MonoBehaviour
         OnAmmoChanged?.Invoke(id, count);
         HUD.Instance?.SetAbilityAmmo(id, count); // direct update if you prefer
     }
+
+
+
+
+
+    // ------------------------------------------------------------------- Ability Bools ------------------
+    public void PlayerIsDashing(bool value)
+    {
+        isDashing = value;
+    }
+
+    public void PlayerIsInvincible(bool value)
+    {
+        isInvincible = value;
+    }
+
+    public void SetEnergyDepletionPaused(bool value)
+    {
+        energyDepletionPaused = value;
+        // (Optional) tell HUD to show/hide a small indicator or bar
+        // HUD.Instance?.ShowEnergyPause(value);
+    }
+
+
+
+
+
+
 }

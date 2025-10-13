@@ -7,11 +7,11 @@ public class AbilityPed : BaseAbility
 
     public override void OnActivate(in AbilityContext ctx, AbilityInstance inst)
     {
-        if (ctx.Upgrades != null) ctx.Upgrades.energyDepletionPaused = true;
+        ctx.Ability.SetEnergyDepletionPaused(true);
     }
 
     public override void OnDeactivate(in AbilityContext ctx, AbilityInstance inst, bool cancelled)
     {
-        if (ctx.Upgrades != null) ctx.Upgrades.energyDepletionPaused = false;
+        ctx.Ability.SetEnergyDepletionPaused(false);
     }
 }

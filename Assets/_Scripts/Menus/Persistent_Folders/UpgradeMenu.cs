@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -5,12 +6,17 @@ using UnityEngine.UI;
 public class UpgradesMenu : MonoBehaviour
 {
     public GameManager gameManager;
-    //public UpgradesManager upgradesManager;
+    public UpgradesManager upgradesManager;
 
     public Button buyAbilityPointButton;
     public Button upgradeStatsButton;
     public Button upgradeAbilitiesButton;
     public Button upgradesBackButton;
+
+    public TMP_Text upgradeMenuCredits;
+    public TMP_Text upgradeMenuAbilityPoints;
+
+    public 
 
     void Start()
     {
@@ -20,17 +26,11 @@ public class UpgradesMenu : MonoBehaviour
         upgradesBackButton.onClick.AddListener(OnBackButtonPressed);
     }
 
-    private void OnBuyAbilityPointButtonPressed()
-    {
-        //gameManager.BuyAbilityPoint();
-    }
-
     private void OnUpgradeStatsButtonPressed()
     {
         if (PersistentMenuManager.Instance != null)
         {
             PersistentMenuManager.Instance.OpenUpgradeStats();
-            Debug.Log("Upgrade Stats Menu Open");
         }
         else
         {
@@ -43,7 +43,6 @@ public class UpgradesMenu : MonoBehaviour
         if (PersistentMenuManager.Instance != null)
         {
             PersistentMenuManager.Instance.OpenUpgradeAbilities();
-            Debug.Log("Upgrade Abilities Menu Open");
         }
         else
         {
@@ -55,4 +54,22 @@ public class UpgradesMenu : MonoBehaviour
     {
         PersistentMenuManager.Instance.Back();
     }
+
+
+
+
+    private void OnBuyAbilityPointButtonPressed()
+    {
+
+    }
+
+
+
+
+
+
+
+
+
+
 }
