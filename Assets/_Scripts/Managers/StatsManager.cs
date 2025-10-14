@@ -6,7 +6,7 @@ public class StatsManager : MonoBehaviour
 {
     public static StatsManager Instance { get; private set; }
 
-    [Header("Runtime Refs")]
+    [Header("Runtime References")]
     public PlayerController playerController; // bound each gameplay scene
     public GameObject spawnPoint;          // spawn reference for distance
 
@@ -18,8 +18,8 @@ public class StatsManager : MonoBehaviour
     [Header("Credits and Ability Points")]
     public int pickupCredits;
     public TMP_Text pickupCreditsText;        // HUD
-    public int totalCredits;
-    public int totalAbilityPoints;
+    public int totalCredits;                  // Total Credits
+    public int totalAbilityPoints;            // Total Ability Points
 
     [Header("Distance Travelled")]
     public float distanceTravelled;
@@ -174,6 +174,19 @@ public class StatsManager : MonoBehaviour
         totalCredits += distanceTravelledCredits;   // distance-based
         totalCredits += pickupCredits;              // pickups
     }
+
+
+    public void BuyAbilityPoints()
+    {
+        if (totalCredits >= 50)
+        {
+            totalCredits -= 50;
+            totalAbilityPoints += 1;
+        }
+    }
+
+
+
 
 
 

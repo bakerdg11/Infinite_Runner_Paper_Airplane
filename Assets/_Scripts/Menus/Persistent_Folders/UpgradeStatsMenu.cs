@@ -18,10 +18,12 @@ public class UpgradeStatsMenu : MonoBehaviour
 
     [Header("Texts")]
     public TMP_Text statsMenuCredits;
-    public TMP_Text edrCurrentLevel;
-    public TMP_Text edrMaxLevel;
-    public TMP_Text lcsCurrentLevel;
-    public TMP_Text lcsMaxLevel;
+    public TMP_Text edrCurrentLevelText;
+    public TMP_Text edrMaxLevelText;
+    public TMP_Text lcsCurrentLevelText;
+    public TMP_Text lcsMaxLevelText;
+
+
 
 
     void Start()
@@ -31,21 +33,47 @@ public class UpgradeStatsMenu : MonoBehaviour
         upgradesBackButton.onClick.AddListener(OnBackButtonPressed);
     }
 
+    private void OnEnable()
+    {
+        UpdateStatsUpgradesMenuNumbers();
+    }
+
     private void OnBackButtonPressed()
     {
         PersistentMenuManager.Instance.Back();
     }
+    
 
+
+    private void UpdateStatsUpgradesMenuNumbers()
+    {
+        if (statsMenuCredits != null)
+            statsMenuCredits.text = "Credits: " + statsManager.totalCredits;
+
+        if (edrCurrentLevelText != null)
+            edrCurrentLevelText.text = upgradesManager.edrCurrentLevel.ToString();
+
+        if (edrMaxLevelText != null)
+            edrMaxLevelText.text = upgradesManager.edrMaxLevel.ToString();
+
+        if (lcsCurrentLevelText != null)
+            lcsCurrentLevelText.text = upgradesManager.lcsCurrentLevel.ToString();
+
+        if (lcsMaxLevelText != null)
+            lcsMaxLevelText.text = upgradesManager.lcsMaxLevel.ToString();
+    }
 
 
     private void OnUpgradeEnergyDepletionRateButtonPressed()
     {
-        //upgradesManager.UpgradeEnergyDepletionRate();
+        upgradesManager.UpgradeEnergyDepletionRate();
+        UpdateStatsUpgradesMenuNumbers();
     }
 
     private void OnUpgradeLaneChangeSpeedButtonPressed()
     {
-        //upgradesManager.UpgradeLaneChangeSpeed();
+        upgradesManager.UpgradeLaneChangeSpeed();
+        UpdateStatsUpgradesMenuNumbers();
     }
 
 

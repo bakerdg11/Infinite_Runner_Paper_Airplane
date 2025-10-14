@@ -61,7 +61,21 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
     }
 
 
-    // PED Ability ----------------
+    private void OnBackButtonPressed()
+    {
+        PersistentMenuManager.Instance.Back();
+    }
+
+
+    public void UpdateAbilitiesUpgradesMenuStats()
+    {
+
+    }
+
+
+
+
+    // ------------------------------------------------------------------------PED Ability ----------------
     private void OnUpgradePauseEnergyDepletionLengthButtonPressed()
     {
         //upgradesManager.UpgradePauseEnergyDepletionLength();
@@ -72,7 +86,7 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
         //upgradesManager.UpgradePauseEnergyDepletionAmmo();
     }
 
-    // Boost Ability
+    // ------------------------------------------------------------------------Boost Ability
     private void OnUpgradeBoostLengthButtonPressed()
     {
         //upgradesManager.UpgradeBoostLength();
@@ -83,7 +97,7 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
         //upgradesManager.UpgradeBoostAmmo();
     }
 
-    // Invincibility Ability
+    // ------------------------------------------------------------------------Invincibility Ability
     private void OnUpgradeInvincibilityLengthButtonPressed()
     {
         //upgradesManager.UpgradeInvincibilityLength();
@@ -94,21 +108,18 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
         //upgradesManager.UpgradeInvincibilityAmmo();
     }
 
-    // Dash Ability
+    // -------------------------------------------------------------------------Dash Ability
     private void OnUpgradeDashAmmoButtonPressed()
     {
         //upgradesManager.UpgradeDashAmmo();
     }
 
-    // Missile Depletion
+    // -------------------------------------------------------------------------Missile Depletion
     private void OnUpgradeMissileAmmoButtonPressed()
     {
         //upgradesManager.UpgradeMissileAmmo();
     }
 
 
-    private void OnBackButtonPressed()
-    {
-        PersistentMenuManager.Instance.Back();
-    }
+
 }

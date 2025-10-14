@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class UpgradesMenu : MonoBehaviour
 {
     public GameManager gameManager;
+    public StatsManager statsManager;
     public UpgradesManager upgradesManager;
 
     public Button buyAbilityPointButton;
@@ -25,6 +26,13 @@ public class UpgradesMenu : MonoBehaviour
         upgradeAbilitiesButton.onClick.AddListener(OnUpgradeAbilitiesButtonPressed);
         upgradesBackButton.onClick.AddListener(OnBackButtonPressed);
     }
+
+
+    private void OnEnable()
+    {
+        UpdateUpgradesMenuNumbers();
+    }
+
 
     private void OnUpgradeStatsButtonPressed()
     {
@@ -56,19 +64,21 @@ public class UpgradesMenu : MonoBehaviour
     }
 
 
-
-
-    private void OnBuyAbilityPointButtonPressed()
+    private void UpdateUpgradesMenuNumbers()
     {
+        if (upgradeMenuCredits != null)
+            upgradeMenuCredits.text = "Credits: " + statsManager.totalCredits;
+
+        if (upgradeMenuAbilityPoints != null)
+            upgradeMenuAbilityPoints.text = "Ability Points: " + statsManager.totalAbilityPoints;
 
     }
 
-
-
-
-
-
-
+    private void OnBuyAbilityPointButtonPressed()
+    {
+        statsManager.BuyAbilityPoints();
+        UpdateUpgradesMenuNumbers();
+    }
 
 
 

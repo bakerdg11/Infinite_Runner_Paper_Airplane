@@ -11,10 +11,10 @@ public class WinMenu : MonoBehaviour
 
     void OnEnable()
     {
-        PopulateFromStats();
+        UpdateWinMenuStats();
     }
 
-    private void PopulateFromStats()
+    private void UpdateWinMenuStats()
     {
         if (distanceTravelledText) distanceTravelledText.text = $"Distance Travelled: {StatsManager.Instance.DistanceMeters}m";
         if (distanceCreditsText) distanceCreditsText.text = $"Travelled Credits: {StatsManager.Instance.DistanceTravelledCredits}";

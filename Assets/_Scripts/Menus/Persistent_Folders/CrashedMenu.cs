@@ -30,12 +30,11 @@ public class CrashedMenu : MonoBehaviour
 
     void OnEnable()
     {
-        PopulateFromStats();
-
+        UpdateCrashMenuStats();
     }
 
 
-    private void PopulateFromStats()
+    private void UpdateCrashMenuStats()
     {
         if (distanceTravelledText) distanceTravelledText.text = $"Distance Travelled: {StatsManager.Instance.DistanceMeters}m";
         if (distanceCreditsText) distanceCreditsText.text = $"Travelled Credits: {StatsManager.Instance.DistanceTravelledCredits}";

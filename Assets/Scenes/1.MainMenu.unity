@@ -8530,10 +8530,10 @@ MonoBehaviour:
   upgradeLaneChangeSpeedButton: {fileID: 1937000366}
   upgradesBackButton: {fileID: 1725482087}
   statsMenuCredits: {fileID: 647267406}
-  edrCurrentLevel: {fileID: 983572590}
-  edrMaxLevel: {fileID: 568079469}
-  lcsCurrentLevel: {fileID: 1153009220}
-  lcsMaxLevel: {fileID: 129196913}
+  edrCurrentLevelText: {fileID: 983572590}
+  edrMaxLevelText: {fileID: 568079469}
+  lcsCurrentLevelText: {fileID: 1153009220}
+  lcsMaxLevelText: {fileID: 129196913}
 --- !u!1 &750485140
 GameObject:
   m_ObjectHideFlags: 0
@@ -9792,7 +9792,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &832756624
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20259,6 +20259,10 @@ MonoBehaviour:
   playerController: {fileID: 2772374308834488364, guid: 3ec6ecf5c1e2ad14cb989be185d185eb, type: 3}
   gameManager: {fileID: 1637684798}
   statsManager: {fileID: 1382638161}
+  edrCurrentLevel: 0
+  edrMaxLevel: 0
+  lcsCurrentLevel: 0
+  lcsMaxLevel: 0
 --- !u!1 &1725482086
 GameObject:
   m_ObjectHideFlags: 0
@@ -22904,7 +22908,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1914071774
 RectTransform:
   m_ObjectHideFlags: 0
@@ -22982,13 +22986,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradesMenu
   gameManager: {fileID: 1637684798}
+  statsManager: {fileID: 1382638161}
   upgradesManager: {fileID: 1711139025}
   buyAbilityPointButton: {fileID: 582366102}
   upgradeStatsButton: {fileID: 1211637799}
   upgradeAbilitiesButton: {fileID: 1423227706}
   upgradesBackButton: {fileID: 2013348030}
-  upgradeMenuCredits: {fileID: 0}
-  upgradeMenuAbilityPoints: {fileID: 0}
+  upgradeMenuCredits: {fileID: 1779331358}
+  upgradeMenuAbilityPoints: {fileID: 1665031256}
 --- !u!1 &1928001363
 GameObject:
   m_ObjectHideFlags: 0
