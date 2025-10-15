@@ -4794,7 +4794,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &428724098
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4892,7 +4892,23 @@ MonoBehaviour:
   missileLaunch:
   - {fileID: 934927815}
   - {fileID: 1852777701}
-  counters: []
+  counters:
+  - abilityId: pauseenergy
+    labels:
+    - {fileID: 1660945378}
+  - abilityId: boost
+    labels:
+    - {fileID: 1122575183}
+  - abilityId: invincible
+    labels:
+    - {fileID: 1181940003}
+  - abilityId: dash
+    labels:
+    - {fileID: 1961678393}
+  - abilityId: missile
+    labels:
+    - {fileID: 1749086310}
+    - {fileID: 496183275}
 --- !u!1 &430750363
 GameObject:
   m_ObjectHideFlags: 0
@@ -5631,7 +5647,7 @@ RectTransform:
   m_Father: {fileID: 148552907}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -9893,23 +9909,6 @@ MonoBehaviour:
   gameManager: {fileID: 1637684798}
   statsManager: {fileID: 1382638161}
   upgradesManager: {fileID: 1711139025}
-  abilityMenuPoints: {fileID: 1064368232}
-  pedLengthCurrentLevel: {fileID: 1497343049}
-  pedLengthMaxLevel: {fileID: 1928001365}
-  pedAmmoCurrentLevel: {fileID: 300464631}
-  pedAmmoMaxLevel: {fileID: 1758821030}
-  boostLengthCurrentLevel: {fileID: 1150757793}
-  boostLengthMaxLevel: {fileID: 1169711364}
-  boostAmmoCurrentLevel: {fileID: 1421287787}
-  boostAmmoMaxLevel: {fileID: 441375642}
-  invincibilityLengthCurrentLevel: {fileID: 1428382952}
-  invincibilityLengthMaxLevel: {fileID: 1270586335}
-  invincibilityAmmoCurrentLevel: {fileID: 1597412718}
-  invincibilityAmmoMaxLevel: {fileID: 430750365}
-  dashAmmoCurrentLevel: {fileID: 1228591900}
-  dashAmmoMaxLevel: {fileID: 1936929156}
-  missileAmmoCurrentLevel: {fileID: 1056291304}
-  missileAmmoMaxLevel: {fileID: 1834845863}
   upgradePedLengthButton: {fileID: 1136461971}
   upgradePedAmmoButton: {fileID: 281859417}
   upgradeBoostLengthButton: {fileID: 1615551732}
@@ -9919,6 +9918,23 @@ MonoBehaviour:
   upgradeDashAmmoButton: {fileID: 298780744}
   upgradeMissileAmmoButton: {fileID: 277405440}
   upgradesBackButton: {fileID: 546545720}
+  abilityMenuPoints: {fileID: 1064368232}
+  pedLengthCurrentLevelText: {fileID: 1497343049}
+  pedLengthMaxLevelText: {fileID: 1928001365}
+  pedAmmoCurrentLevelText: {fileID: 300464631}
+  pedAmmoMaxLevelText: {fileID: 1758821030}
+  boostLengthCurrentLevelText: {fileID: 1150757793}
+  boostLengthMaxLevelText: {fileID: 1169711364}
+  boostAmmoCurrentLevelText: {fileID: 1421287787}
+  boostAmmoMaxLevelText: {fileID: 441375642}
+  invincibilityLengthCurrentLevelText: {fileID: 1428382952}
+  invincibilityLengthMaxLevelText: {fileID: 1270586335}
+  invincibilityAmmoCurrentLevelText: {fileID: 1597412718}
+  invincibilityAmmoMaxLevelText: {fileID: 430750365}
+  dashAmmoCurrentLevelText: {fileID: 1228591900}
+  dashAmmoMaxLevelText: {fileID: 1936929156}
+  missileAmmoCurrentLevelText: {fileID: 1056291304}
+  missileAmmoMaxLevelText: {fileID: 1834845863}
 --- !u!1 &857552215
 GameObject:
   m_ObjectHideFlags: 0
@@ -13736,7 +13752,7 @@ RectTransform:
   m_Father: {fileID: 1232107897}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -15512,7 +15528,7 @@ RectTransform:
   m_Father: {fileID: 979416939}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -16404,7 +16420,7 @@ MonoBehaviour:
   pickupCredits: 0
   pickupCreditsText: {fileID: 2119591241}
   totalCredits: 0
-  totalAbilityPoints: 0
+  totalAbilityPoints: 20
   distanceTravelled: 0
   distanceTravelledText: {fileID: 155347432}
   distanceTravelledCredits: 0
@@ -17245,7 +17261,7 @@ RectTransform:
   m_Father: {fileID: 1833685016}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -19884,7 +19900,7 @@ RectTransform:
   m_Father: {fileID: 2037140690}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -20034,7 +20050,7 @@ RectTransform:
   m_Father: {fileID: 480360607}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -20263,6 +20279,22 @@ MonoBehaviour:
   edrMaxLevel: 0
   lcsCurrentLevel: 0
   lcsMaxLevel: 0
+  pedLengthCurrentLevel: 0
+  pedLengthMaxLevel: 2
+  pedAmmoCurrentLevel: 0
+  pedAmmoMaxLevel: 3
+  boostLengthCurrentLevel: 0
+  boostLengthMaxLevel: 2
+  boostAmmoCurrentLevel: 0
+  boostAmmoMaxLevel: 3
+  invincibilityLengthCurrentLevel: 0
+  invincibilityLengthMaxLevel: 2
+  invincibilityAmmoCurrentLevel: 0
+  invincibilityAmmoMaxLevel: 3
+  dashAmmoCurrentLevel: 0
+  dashAmmoMaxLevel: 2
+  missileAmmoCurrentLevel: 0
+  missileAmmoMaxLevel: 3
 --- !u!1 &1725482086
 GameObject:
   m_ObjectHideFlags: 0
@@ -22908,7 +22940,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1914071774
 RectTransform:
   m_ObjectHideFlags: 0
@@ -24702,8 +24734,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 785002707}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -25050,7 +25082,7 @@ RectTransform:
   m_Father: {fileID: 1782392655}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}

@@ -15,5 +15,5 @@ MonoBehaviour:
   abilityId: boost
   icon: {fileID: 0}
   duration: 3
-  startingCharges: 1
+  startingCharges: 2
   allowRefreshWhileActive: 1

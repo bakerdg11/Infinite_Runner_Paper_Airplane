@@ -30,6 +30,11 @@ public class AbilitySystem : MonoBehaviour
         foreach (var def in loadout) _instances.Add(new AbilityInstance(def));
     }
 
+    private void Start()
+    {
+        PushAllAmmoToHud();
+    }
+
     void Update()
     {
         float dt = Time.deltaTime;
@@ -107,9 +112,21 @@ public class AbilitySystem : MonoBehaviour
     {
         foreach (var inst in _instances)
         {
-            inst.Reset();
-            NotifyAmmo(inst.def.abilityId, inst.chargesLeft);
+            inst.active = false;
+            inst.timeLeft = 0f;
+
+            // starting charges from the ScriptableObject (upgrades can add to this later)
+            inst.chargesLeft = Mathf.Max(0, inst.def.startingCharges);
         }
+
+        PushAllAmmoToHud(); // <-- show starting charges on the HUD
+    }
+
+    public void PushAllAmmoToHud()
+    {
+        if (HUD.Instance == null) return;
+        foreach (var inst in _instances)
+            HUD.Instance.SetAbilityAmmo(inst.def.abilityId, inst.chargesLeft);
     }
 
     public AbilityInstance GetInstance(string id)
@@ -120,8 +137,8 @@ public class AbilitySystem : MonoBehaviour
 
     private void NotifyAmmo(string id, int count)
     {
-        OnAmmoChanged?.Invoke(id, count);
-        HUD.Instance?.SetAbilityAmmo(id, count); // direct update if you prefer
+        HUD.Instance?.SetAbilityAmmo(id, count);
+        OnAmmoChanged?.Invoke(id, count); // if you also use the event
     }
 
 
@@ -142,8 +159,6 @@ public class AbilitySystem : MonoBehaviour
     public void SetEnergyDepletionPaused(bool value)
     {
         energyDepletionPaused = value;
-        // (Optional) tell HUD to show/hide a small indicator or bar
-        // HUD.Instance?.ShowEnergyPause(value);
     }
 
 

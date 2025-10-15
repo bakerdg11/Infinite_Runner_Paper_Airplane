@@ -47,7 +47,8 @@ public class PlayerController : MonoBehaviour
     {
         Instance = this;
 
-        abilitySystem = GetComponent<AbilitySystem>(); // player has this component
+        if (abilitySystem == null)
+            abilitySystem = GetComponent<AbilitySystem>();
     }
 
     public void InjectManagers(GameManager gm, StatsManager sm, UpgradesManager um)
@@ -203,6 +204,7 @@ public class PlayerController : MonoBehaviour
         energy = maxEnergy;
         HUD.Instance?.SetEnergyRange(0f, maxEnergy);
         HUD.Instance?.UpdateEnergy(energy);
+        abilitySystem.BeginNewRun();
     }
 
 

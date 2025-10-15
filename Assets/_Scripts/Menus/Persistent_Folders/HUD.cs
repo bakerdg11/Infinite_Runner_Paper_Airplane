@@ -11,7 +11,7 @@ using System;
 public struct AbilityCounter
 {
     public string abilityId;
-    public TMP_Text label; // the tiny number in the top-right of the button
+    public List<TMP_Text> labels;
 }
 
 
@@ -46,7 +46,7 @@ public class HUD : MonoBehaviour
     [Header("Ability Counters")]
     [SerializeField] private List<AbilityCounter> counters;
 
-    private Dictionary<string, TMP_Text> _map;
+    private Dictionary<string, List<TMP_Text>> _map;
 
 
     void Awake()
@@ -58,8 +58,8 @@ public class HUD : MonoBehaviour
         _map = new(StringComparer.OrdinalIgnoreCase);
         foreach (var c in counters)
         {
-            if (!string.IsNullOrEmpty(c.abilityId) && c.label != null)
-                _map[c.abilityId] = c.label;
+            if (!string.IsNullOrEmpty(c.abilityId) && c.labels != null)
+                _map[c.abilityId] = c.labels;
         }
     }
 
@@ -84,6 +84,12 @@ public class HUD : MonoBehaviour
     {
         StartCoroutine(FindAirplaneWhenReady());
         EnsureAbilitySystem();
+
+        if (abilitySystem == null)
+            abilitySystem = FindFirstObjectByType<AbilitySystem>();
+
+        abilitySystem?.PushAllAmmoToHud();        // immediate try
+        StartCoroutine(SyncAmmoWhenReady());
     }
 
     private IEnumerator FindAirplaneWhenReady()
@@ -95,6 +101,23 @@ public class HUD : MonoBehaviour
         }
 
         Debug.Log("Airplane found and ready for HUD interaction");
+    }
+
+
+
+    private IEnumerator SyncAmmoWhenReady()
+    {
+        // Keep trying for up to ~2 seconds (120 frames at 60fps)
+        for (int i = 0; i < 120; i++)
+        {
+            if (EnsureAbilitySystem())
+            {
+                abilitySystem.PushAllAmmoToHud();
+                yield break;
+            }
+            yield return null;
+        }
+        Debug.LogWarning("[HUD] Couldn’t find AbilitySystem in time to sync ammo.");
     }
 
 
@@ -177,8 +200,14 @@ public class HUD : MonoBehaviour
 
     public void SetAbilityAmmo(string abilityId, int count)
     {
-        if (_map != null && _map.TryGetValue(abilityId, out var label) && label != null)
-            label.text = count.ToString();
+        if (_map != null && _map.TryGetValue(abilityId, out var labels))
+        {
+            foreach (var label in labels)
+            {
+                if (label != null)
+                    label.text = count.ToString();
+            }
+        }
     }
 
     public void OnPressDash()
@@ -214,99 +243,3 @@ public class HUD : MonoBehaviour
 
 }
 
-
-    /*
-    // ----------------------ABILITY BUTTONS-----------------------
-    public void OnPauseEnergyDepletionButtonPressed()
-    {
-        if (upgradesManager.energyDepletionPaused)
-        {
-            return;
-        }
-        else
-        {
-            if (upgradesManager.pauseEnergyAmmo >= 1)
-            {
-                upgradesManager.EnergyDepletionPaused();
-                upgradesManager.pauseEnergyAmmo -= 1;
-                upgradesManager.UpdateAmmoUI();
-            }
-
-        }
-    }
-
-    public void OnBoostButtonPressed()
-    {
-        if (upgradesManager.boostEnabled || upgradesManager.dashEnabled)
-        {
-            return;
-        }
-        else
-        {
-            if (upgradesManager.boostAmmo >= 1)
-            {
-                upgradesManager.Boost();
-                upgradesManager.boostAmmo -= 1;
-                upgradesManager.UpdateAmmoUI();
-            }
-
-        }
-    }
-
-    public void OnInvincibleButtonPressed()
-    {
-        if (upgradesManager.invincibleEnabled)
-        {
-            return;
-        }
-        else
-        {
-            if (upgradesManager.invincibilityAmmo >= 1)
-            {
-                upgradesManager.Invincible();
-                upgradesManager.invincibilityAmmo -= 1;
-                upgradesManager.UpdateAmmoUI();
-            }
-
-        }
-    }
-
-    public void OnDashButtonPressed()
-    {
-        if (upgradesManager.dashEnabled || upgradesManager.boostEnabled)
-        {
-            return;
-        }
-        else
-        {
-            if (upgradesManager.dashAmmo >= 1)
-            {
-                upgradesManager.Dash();
-                upgradesManager.dashAmmo -= 1;
-                upgradesManager.UpdateAmmoUI();
-            }
-
-        }
-    }
-
-    public void OnMissileLaunchButtonPressed()
-    {
-        if (upgradesManager.missileFired)
-        {
-            return;
-        }
-        else
-        {
-            if (upgradesManager.missileAmmo >= 1)
-            {
-                upgradesManager.Missile();
-                playerController.FireMissile();
-                upgradesManager.missileAmmo -= 1;
-                upgradesManager.UpdateAmmoUI();
-            }
-
-        }
-
-    }
-
-    */

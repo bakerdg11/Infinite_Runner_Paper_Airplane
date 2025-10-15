@@ -15,5 +15,5 @@ MonoBehaviour:
   abilityId: pauseenergy
   icon: {fileID: 0}
   duration: 5
-  startingCharges: 1
+  startingCharges: 4
   allowRefreshWhileActive: 1

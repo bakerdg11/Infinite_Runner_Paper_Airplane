@@ -37,18 +37,6 @@ public class LevelSelectMenu : MonoBehaviour
 
     private void BeginLevel1()
     {
-
-        /*
-        // If you’ve added the PersistentPlayerManager to Bootstrap, start a fresh run
-        if (PlayerManager.Instance != null)
-        {
-            PlayerManager.Instance.BeginNewRun();
-        }
-        else
-        {
-            Debug.LogWarning("PersistentPlayerManager not found. Player may not be created/moved.");
-        }
-        */
         // Close all menus if it’s up
         if (PersistentMenuManager.Instance != null)
         {
@@ -58,8 +46,6 @@ public class LevelSelectMenu : MonoBehaviour
 
         // Load the gameplay scene (single load is fine—persistent systems survive)
         SceneManager.LoadScene("2.Level1", LoadSceneMode.Single);
-
-
     }
 
 
