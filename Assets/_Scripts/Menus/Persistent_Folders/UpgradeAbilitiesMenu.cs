@@ -106,14 +106,14 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
         if (invincibilityAmmoMaxLevelText != null)
             invincibilityAmmoMaxLevelText.text = upgradesManager?.invincibilityAmmoMaxLevel.ToString();
         // Dash
-        if (dashAmmoCurrentLevelText== null)
+        if (dashAmmoCurrentLevelText != null)
             dashAmmoCurrentLevelText.text = upgradesManager?.dashAmmoCurrentLevel.ToString();
-        if (dashAmmoMaxLevelText== null)
+        if (dashAmmoMaxLevelText != null)
             dashAmmoMaxLevelText.text = upgradesManager?.dashAmmoMaxLevel.ToString();
         // Missiles
-        if (missileAmmoCurrentLevelText == null)
+        if (missileAmmoCurrentLevelText != null)
             missileAmmoCurrentLevelText.text = upgradesManager?.missileAmmoCurrentLevel.ToString();
-        if (missileAmmoMaxLevelText== null)
+        if (missileAmmoMaxLevelText != null)
             missileAmmoMaxLevelText.text = upgradesManager?.missileAmmoMaxLevel.ToString();
     }
 

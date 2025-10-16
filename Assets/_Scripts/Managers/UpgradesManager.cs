@@ -10,7 +10,17 @@ public class UpgradesManager : MonoBehaviour
     public static UpgradesManager Instance { get; private set; }
 
     [Header("References")]
-    public PlayerController playerController;
+    private PlayerController _player;
+    public PlayerController PlayerController
+    {
+        get
+        {
+            if (_player == null)
+                _player = PlayerManager.Instance?.PlayerController
+                          ?? FindFirstObjectByType<PlayerController>();
+            return _player;
+        }
+    }
     public GameManager gameManager;
     public StatsManager statsManager;
 
@@ -20,7 +30,7 @@ public class UpgradesManager : MonoBehaviour
     public int lcsCurrentLevel;
     public int lcsMaxLevel;
 
-    [Header("Abilities Upgrade Men")]
+    [Header("Abilities Upgrade Menu")]
     // Pause Energy Depletion
     public int pedLengthCurrentLevel;
     public int pedLengthMaxLevel;
@@ -61,17 +71,9 @@ public class UpgradesManager : MonoBehaviour
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
-
-
-
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        playerController = FindFirstObjectByType<PlayerController>();
 
-        if (playerController == null)
-        {
-            Debug.LogWarning("PaperplayerController not found in scene " + scene.name);
-        }
     }
 
 
@@ -83,7 +85,7 @@ public class UpgradesManager : MonoBehaviour
         {
             if (edrCurrentLevel < edrMaxLevel)
             {
-                playerController.energyDepletionRate -= 0.01f;
+                PlayerController.energyDepletionRate -= 0.01f;
                 statsManager.totalCredits -= 10;
                 edrCurrentLevel += 1;
             }
@@ -96,7 +98,7 @@ public class UpgradesManager : MonoBehaviour
         {
             if (lcsCurrentLevel < lcsMaxLevel)
             {
-                playerController.lateralMoveSpeed += 0.5f;
+                PlayerController.lateralMoveSpeed += 0.5f;
                 statsManager.totalCredits -= 10;
                 lcsCurrentLevel += 1;
             }

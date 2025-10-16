@@ -17091,7 +17091,7 @@ MonoBehaviour:
   spawnPoint: {fileID: 0}
   pickupCredits: 0
   pickupCreditsText: {fileID: 2119591241}
-  totalCredits: 500
+  totalCredits: 0
   totalAbilityPoints: 20
   distanceTravelled: 0
   distanceTravelledText: {fileID: 155347432}
@@ -21322,12 +21322,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2f55a7d821966148aacbcf3382c2fc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradesManager
+  playerController: {fileID: 2772374308834488364, guid: 3ec6ecf5c1e2ad14cb989be185d185eb, type: 3}
   gameManager: {fileID: 1637684798}
   statsManager: {fileID: 1382638161}
   edrCurrentLevel: 0
-  edrMaxLevel: 3
+  edrMaxLevel: 0
   lcsCurrentLevel: 0
-  lcsMaxLevel: 3
+  lcsMaxLevel: 0
   pedLengthCurrentLevel: 0
   pedLengthMaxLevel: 2
   pedAmmoCurrentLevel: 0
