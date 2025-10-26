@@ -9,6 +9,7 @@ public abstract class BaseAbility : ScriptableObject
 
     [Header("Timing & Ammo")]
     public float duration = 0f;
+    public float cooldown = 0f;
     public int startingCharges = 0;
     public bool allowRefreshWhileActive = true;
 

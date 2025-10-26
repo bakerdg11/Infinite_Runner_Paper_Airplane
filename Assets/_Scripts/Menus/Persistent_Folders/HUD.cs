@@ -49,6 +49,19 @@ public class HUD : MonoBehaviour
     private Dictionary<string, List<TMP_Text>> _map;
 
 
+
+    [Header("Sliders For Abilities")]
+    [SerializeField] private Slider dashSlider;
+    [SerializeField] private Slider boostSlider;
+    [SerializeField] private Slider invincibleSlider;
+    [SerializeField] private Slider pauseEnergySlider;
+    [SerializeField] private Slider missileSliderLeft;
+    [SerializeField] private Slider missileSliderRight;
+
+
+
+
+
     void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -239,6 +252,51 @@ public class HUD : MonoBehaviour
         if (!EnsureAbilitySystem()) return;      // guard against null
         abilitySystem.TryActivate("missile");
     }
+
+
+
+
+    // ----------------------------------------------------------------- Sliders --------------------------
+    public void SetAbilitySlider(string abilityId, float normalizedValue, bool active)
+    {
+        Slider target = null;
+
+        switch (abilityId.ToLower())
+        {
+            case "dash": target = dashSlider; break;
+            case "boost": target = boostSlider; break;
+            case "invincible": target = invincibleSlider; break;
+            case "pauseenergy": target = pauseEnergySlider; break;
+
+            case "missile":
+                if (missileSliderLeft != null)
+                {
+                    missileSliderLeft.gameObject.SetActive(active);
+                    missileSliderLeft.value = normalizedValue;
+                }
+
+                if (missileSliderRight != null)
+                {
+                    missileSliderRight.gameObject.SetActive(active);
+                    missileSliderRight.value = normalizedValue;
+                }
+                return; // prevents generic code below from running
+        }
+
+        if (target == null) return;
+
+        target.gameObject.SetActive(active);
+        target.value = normalizedValue;
+    }
+
+
+
+
+
+
+
+
+
 
 
 }

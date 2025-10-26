@@ -15,5 +15,6 @@ MonoBehaviour:
   abilityId: dash
   icon: {fileID: 0}
   duration: 0.4
+  cooldown: 0
   startingCharges: 3
-  allowRefreshWhileActive: 1
+  allowRefreshWhileActive: 0

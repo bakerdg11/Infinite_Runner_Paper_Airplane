@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -50,9 +51,14 @@ public class AbilitySystem : MonoBehaviour
             {
                 inst.timeLeft -= dt;
                 def.OnTick(ctx, inst, dt);
+
+                float normalized = Mathf.Clamp01(inst.timeLeft / def.duration);
+                HUD.Instance?.SetAbilitySlider(def.abilityId, normalized, active: true);
+
                 if (inst.timeLeft <= 0f)
                 {
                     EndAbility(inst, cancelled: false);
+                    HUD.Instance?.SetAbilitySlider(def.abilityId, 0f, active: false);
                 }
             }
         }
@@ -68,6 +74,12 @@ public class AbilitySystem : MonoBehaviour
         var def = loadout[idx];
         var inst = _instances[idx];
 
+        if (inst.timeLeft > 0f && !inst.active)
+        {
+            Debug.Log($"[{def.abilityId}] still cooling down ({inst.timeLeft:F2}s left)");
+            return false;
+        }
+
         var ctx = BuildCtx();
         if (!def.CanActivate(ctx, inst)) return false;
 
@@ -81,12 +93,19 @@ public class AbilitySystem : MonoBehaviour
             inst.active = true;
             inst.timeLeft = def.duration;
             def.OnActivate(ctx, inst);
+            HUD.Instance?.SetAbilitySlider(def.abilityId, 1f, active: true);
         }
         else
         {
             // instant effect (e.g., missile)
             def.OnActivate(ctx, inst);
-            def.OnDeactivate(ctx, inst, cancelled: false); // nothing to keep; consistent lifecycle
+            def.OnDeactivate(ctx, inst, cancelled: false);
+
+            // Start cooldown if ability defines one (e.g., missile)
+            if (def.cooldown > 0f)
+            {
+                StartCoroutine(CooldownCountdown(inst, def));
+            }
         }
 
         return true;
@@ -105,6 +124,29 @@ public class AbilitySystem : MonoBehaviour
     {
         inst.def.OnDeactivate(BuildCtx(), inst, cancelled);
         inst.active = false;
+        inst.timeLeft = 0f;
+
+        if (inst.def.cooldown > 0f)
+        {
+            StartCoroutine(CooldownCountdown(inst, inst.def));
+        }
+    }
+
+    private IEnumerator CooldownCountdown(AbilityInstance inst, BaseAbility def)
+    {
+        float remaining = def.cooldown;
+        HUD.Instance?.SetAbilitySlider(def.abilityId, 1f, true);
+
+        while (remaining > 0f)
+        {
+            remaining -= Time.deltaTime;
+            float normalized = Mathf.Clamp01(remaining / def.cooldown);
+            HUD.Instance?.SetAbilitySlider(def.abilityId, normalized, true);
+            inst.timeLeft = remaining; // so TryActivate can check it
+            yield return null;
+        }
+
+        HUD.Instance?.SetAbilitySlider(def.abilityId, 0f, false);
         inst.timeLeft = 0f;
     }
 

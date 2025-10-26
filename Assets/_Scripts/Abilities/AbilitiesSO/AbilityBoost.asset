@@ -15,5 +15,6 @@ MonoBehaviour:
   abilityId: boost
   icon: {fileID: 0}
   duration: 3
+  cooldown: 0
   startingCharges: 2
-  allowRefreshWhileActive: 1
+  allowRefreshWhileActive: 0

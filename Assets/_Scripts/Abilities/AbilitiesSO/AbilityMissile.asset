@@ -15,5 +15,6 @@ MonoBehaviour:
   abilityId: missile
   icon: {fileID: 0}
   duration: 0
+  cooldown: 1
   startingCharges: 5
   allowRefreshWhileActive: 1
