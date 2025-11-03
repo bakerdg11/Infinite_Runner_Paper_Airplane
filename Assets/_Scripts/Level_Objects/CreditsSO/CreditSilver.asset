@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbf22c260e217134fa8572248c3ca94e, type: 3}
+  m_Name: CreditSilver
+  m_EditorClassIdentifier: Assembly-CSharp::CoinDefinition
+  coinId: Silver
+  creditValue: 5
+  coinPrefab: {fileID: 7033353280094909504, guid: 4e362c801a58f0442b257996b3abd3f3, type: 3}
+  mesh: {fileID: 2239291643319601857, guid: a189949c60f9de74fb47359b8ff5631d, type: 3}
+  material: {fileID: 2100000, guid: d94eddb10c18e7542b873b3a457257c5, type: 2}
+  spawnWeight: 0.25
+  pickupSfx: {fileID: 0}
+  pickupVfxPrefab: {fileID: 0}

@@ -103,6 +103,8 @@ public class PlayerManager : MonoBehaviour
         if (upgradesManager == null) Debug.LogWarning("[PlayerManager] UpgradesManager.Instance not found.");
 
         PlayerController.InjectManagers(gameManager, statsManager, upgradesManager);
+
+        UpgradesManager.Instance?.ApplyRuntimeTuning(PlayerController);
     }
 
     /// <summary>

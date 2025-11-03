@@ -85,7 +85,7 @@ public class UpgradesManager : MonoBehaviour
         {
             if (edrCurrentLevel < edrMaxLevel)
             {
-                PlayerController.energyDepletionRate -= 0.01f;
+                PlayerController.energyDepletionRate -= 5f;
                 statsManager.totalCredits -= 10;
                 edrCurrentLevel += 1;
             }
@@ -211,6 +211,21 @@ public class UpgradesManager : MonoBehaviour
             }
         }
     }
+
+
+
+    public void ApplyRuntimeTuning(PlayerController pc)
+    {
+        if (pc == null) return;
+
+
+
+
+
+    }
+
+
+
 
 
 
