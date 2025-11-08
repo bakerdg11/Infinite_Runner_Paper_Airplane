@@ -32,7 +32,6 @@ public class MainMenu : MonoBehaviour
         if (PersistentMenuManager.Instance != null)
         {
             PersistentMenuManager.Instance.OpenUpgrades();
-            Debug.Log("Records Menu Open");
         }
         else
         {
@@ -45,7 +44,6 @@ public class MainMenu : MonoBehaviour
         if (PersistentMenuManager.Instance != null)
         {
             PersistentMenuManager.Instance.OpenStatistics();
-            Debug.Log("Statistics Menu Open");
         }
         else
         {
@@ -58,7 +56,6 @@ public class MainMenu : MonoBehaviour
         if (PersistentMenuManager.Instance != null)
         {
             PersistentMenuManager.Instance.OpenSettings();
-            Debug.Log("Settings Menu Open");
         }
         else
         {

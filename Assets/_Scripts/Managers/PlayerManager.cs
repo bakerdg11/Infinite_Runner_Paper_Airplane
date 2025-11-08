@@ -3,16 +3,17 @@ using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
-
     public static PlayerManager Instance { get; private set; }
 
     [Header("Player Setup")]
     [SerializeField] private GameObject playerPrefab;     // assign in Bootstrap
-    [SerializeField] private Transform explicitSpawnPoint; // optional override
+    [SerializeField] private Transform explicitSpawnPoint; // optional override (unused here)
 
     [Header("Runtime")]
     public PlayerController PlayerController { get; private set; }
-    public GameObject PlayerGO { get; private set; }    // Physical player object in the scene once instantiated. 
+    public GameObject PlayerGO { get; private set; }
+
+    [SerializeField] private string mainMenuSceneName = "1.MainMenu";
 
     private void Awake()
     {
@@ -26,9 +27,7 @@ public class PlayerManager : MonoBehaviour
     private void OnDestroy()
     {
         if (Instance == this)
-        {
             SceneManager.sceneLoaded -= OnSceneLoaded;
-        }
     }
 
     private void Start()
@@ -39,24 +38,37 @@ public class PlayerManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Re-locate spawn and re-bind after scene loads
         EnsurePlayerExists();
+
+        // If Main Menu, doesn't make player visible
+        bool isMainMenu = string.Equals(scene.name, mainMenuSceneName, System.StringComparison.OrdinalIgnoreCase);
+        if (isMainMenu)
+        {
+            if (PlayerGO != null && PlayerGO.activeSelf)
+                PlayerGO.SetActive(false);
+            return;
+        }
+
+        // If Not Main Menu
+        if (PlayerGO != null && !PlayerGO.activeSelf)
+            PlayerGO.SetActive(true);
+
         MovePlayerToSpawnPoint();
         BindPlayerComponents();
+        UpgradesManager.Instance?.ApplyUpgradedStats(PlayerController);
+        PlayerController?.SetupPlayerForNewRun();
     }
 
-    /// <summary>
-    /// Spawns the player if none exists yet. If one is already present (placed in scene), uses it.
-    /// </summary>
     public void EnsurePlayerExists()
     {
-        if (PlayerGO != null) return;
+        if (PlayerGO != null && PlayerController != null) return;
 
         var existing = FindFirstObjectByType<PlayerController>(FindObjectsInactive.Exclude);
         if (existing != null)
         {
             PlayerGO = existing.gameObject;
             PlayerController = existing;
+            DontDestroyOnLoad(PlayerGO);
             return;
         }
 
@@ -66,16 +78,32 @@ public class PlayerManager : MonoBehaviour
             return;
         }
 
-        // Spawn with a neutral position; don't query SpawnPoint here.
         PlayerGO = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         PlayerController = PlayerGO.GetComponent<PlayerController>();
         if (PlayerController == null)
+        {
             Debug.LogError("[PlayerManager] PlayerController missing on prefab.");
+            return;
+        }
+
+        DontDestroyOnLoad(PlayerGO);
     }
 
-    /// <summary>
-    /// Attempts to bind PlayerController and notify it of managers.
-    /// </summary>
+    public void MovePlayerToSpawnPoint()
+    {
+        if (PlayerGO == null) return;
+
+        var spawn = GameObject.FindWithTag("SpawnPoint") ?? GameObject.Find("SpawnPoint");
+        if (spawn != null)
+        {
+            PlayerGO.transform.SetPositionAndRotation(spawn.transform.position, spawn.transform.rotation);
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerManager] No SpawnPoint found in this scene.");
+        }
+    }
+
     public void BindPlayerComponents()
     {
         if (PlayerGO == null)
@@ -93,7 +121,6 @@ public class PlayerManager : MonoBehaviour
             return;
         }
 
-        // Provide references from your existing singletons (already DontDestroyOnLoad)
         var gameManager = GameManager.Instance;
         var statsManager = StatsManager.Instance;
         var upgradesManager = UpgradesManager.Instance;
@@ -101,46 +128,5 @@ public class PlayerManager : MonoBehaviour
         if (gameManager == null) Debug.LogWarning("[PlayerManager] GameManager.Instance not found.");
         if (statsManager == null) Debug.LogWarning("[PlayerManager] StatsManager.Instance not found.");
         if (upgradesManager == null) Debug.LogWarning("[PlayerManager] UpgradesManager.Instance not found.");
-
-        PlayerController.InjectManagers(gameManager, statsManager, upgradesManager);
-
-        UpgradesManager.Instance?.ApplyRuntimeTuning(PlayerController);
     }
-
-    /// <summary>
-    /// Finds a spawn position and moves the player there.
-    /// </summary>
-    public void MovePlayerToSpawnPoint()
-    {
-        if (PlayerGO == null) return;
-
-        var spawn = GameObject.FindWithTag("SpawnPoint") ?? GameObject.Find("SpawnPoint");
-        if (spawn != null)
-        {
-            // move the player
-            PlayerGO.transform.SetPositionAndRotation(spawn.transform.position, spawn.transform.rotation);
-        }
-        else
-        {
-            Debug.LogWarning("[PlayerManager] No SpawnPoint found in this scene.");
-        }
-    }
-
-    private Vector3 GetSpawnPosition()
-    {
-        var found = GameObject.Find("SpawnPoint");
-        if (found != null) return found.transform.position;
-
-        Debug.LogWarning("[PlayerManager] No SpawnPoint found in this scene.");
-        return Vector3.zero; // fallback
-    }
-
-
-
-
-
-
-
-
-
 }

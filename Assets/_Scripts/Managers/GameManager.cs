@@ -67,6 +67,8 @@ public void RestartLevelScene()
         if (active.IsValid())
             SceneManager.LoadScene(active.name, LoadSceneMode.Single);
 
+        //PlayerController.Instance?.PlayerRespawnConditions();
+
         HUD.Instance.ResetPickupCredits();
         StatsManager.Instance.ResetPickupCredits();
     }

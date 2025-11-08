@@ -6,9 +6,6 @@ public class PlayerController : MonoBehaviour
     public static PlayerController Instance;
     private Rigidbody rb;
 
-    public GameManager gameManager;
-    public StatsManager statsManager;
-    public UpgradesManager upgradesManager;
     public AbilitySystem abilitySystem;
 
     [Header("Physics")]
@@ -27,7 +24,7 @@ public class PlayerController : MonoBehaviour
     [Header("Energy")]
     public float maxEnergy = 100f;
     public float energy = 100f;
-    public float energyDepletionRate = 50f;
+    public float energyDepletionRate = 75f;
     public bool isSteering = false;
 
     [Header("Missiles")]
@@ -40,22 +37,37 @@ public class PlayerController : MonoBehaviour
     public float maxBankAngle = 25f;
     public float bankLerpSpeed = 7f;
 
+    [HideInInspector] public float baselineEnergyDepletionRate;
+    [HideInInspector] public float baselineLateralMoveSpeed;
+    private bool _baselineCaptured;
+
     private float _targetX;
     private float _bank;
 
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
+
+        if (!_baselineCaptured)
+        {
+            baselineEnergyDepletionRate = energyDepletionRate; // 75f from your prefab
+            baselineLateralMoveSpeed = lateralMoveSpeed;     // 7.5f from your prefab
+            _baselineCaptured = true;
+        }
 
         if (abilitySystem == null)
             abilitySystem = GetComponent<AbilitySystem>();
     }
 
-    public void InjectManagers(GameManager gm, StatsManager sm, UpgradesManager um)
+    void OnDestroy()
     {
-        gameManager = gm;
-        statsManager = sm;
-        upgradesManager = um;
+        if (Instance == this) Instance = null;
     }
 
     void Start()
@@ -63,10 +75,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
 
-        // init energy + push to HUD
-        energy = maxEnergy;
-        HUD.Instance?.SetEnergyRange(0f, maxEnergy);
-        HUD.Instance?.UpdateEnergy(energy);
+        RefillEnergy();
 
         currentSpeed = baseSpeed;
         _targetX = 0f;
@@ -172,17 +181,17 @@ public class PlayerController : MonoBehaviour
         Time.timeScale = 0f;
         rb.linearVelocity = Vector3.zero;
 
-        DisableGravity();
-        NotLaunched();
+        //DisableGravity();
+        //NotLaunched();
 
-        statsManager.FinalizeRun();
+        StatsManager.Instance?.FinalizeRun();
 
         PersistentMenuManager.Instance.OpenCrashMenu();
     }
 
 
 
-    public void OnRespawned()
+    public void SetupPlayerForNewRun()
     {
         if (rb)
         {
@@ -193,6 +202,8 @@ public class PlayerController : MonoBehaviour
 
         NotLaunched();
         DisableGravity();
+        UpgradesManager.Instance?.ApplyUpgradedStats(this);
+        RefillEnergy();
 
         currentSpeed = baseSpeed;
         _targetX = 0f;
@@ -200,13 +211,8 @@ public class PlayerController : MonoBehaviour
         var rot = transform.rotation.eulerAngles; rot.z = 0f;
         transform.rotation = Quaternion.Euler(rot);
 
-        // refill energy for the new run and update HUD immediately
-        energy = maxEnergy;
-        HUD.Instance?.SetEnergyRange(0f, maxEnergy);
-        HUD.Instance?.UpdateEnergy(energy);
         abilitySystem.BeginNewRun();
     }
-
 
 
     public void EnableGravity() 
@@ -228,19 +234,12 @@ public class PlayerController : MonoBehaviour
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public void RefillEnergy()
+    {
+        energy = maxEnergy;
+        HUD.Instance?.SetEnergyRange(0f, maxEnergy);
+        HUD.Instance?.UpdateEnergy(energy);
+    }
 
 
 

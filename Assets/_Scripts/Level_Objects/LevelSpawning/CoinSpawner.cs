@@ -21,7 +21,7 @@ public class CoinSpawner : MonoBehaviour
     private readonly List<Transform> _spawnPoints = new();
     private readonly List<GameObject> _liveCoins = new();
     private string _currentScene = "";
-    private bool _spawnedThisScene = false;
+    //private bool _spawnedThisScene = false;
 
     private void Awake()
     {
@@ -37,7 +37,7 @@ public class CoinSpawner : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         _currentScene = scene.name;
-        _spawnedThisScene = false;
+        //_spawnedThisScene = false;
 
         // Clear any leftovers (e.g., returning from another scene)
         DespawnAll();
@@ -48,7 +48,7 @@ public class CoinSpawner : MonoBehaviour
         // Collect spawn points in this scene and spawn once
         RefreshSpawnPoints();
         SpawnFixedSet();
-        _spawnedThisScene = true;
+        //_spawnedThisScene = true;
     }
 
     private void RefreshSpawnPoints()
@@ -135,6 +135,6 @@ public class CoinSpawner : MonoBehaviour
         DespawnAll();
         RefreshSpawnPoints();
         SpawnFixedSet();
-        _spawnedThisScene = true;
+        //_spawnedThisScene = true;
     }
 }

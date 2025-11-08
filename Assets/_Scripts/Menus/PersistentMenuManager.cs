@@ -42,12 +42,10 @@ public class PersistentMenuManager : MonoBehaviour
         if (scene.name == "1.MainMenu")
         {
             OpenMenu(mainMenu);
-            Debug.Log("Main Menu opened on startup.");
         }
         else
         {
             OpenMenu(hudMenu);
-            Debug.Log("HUD opened for gameplay scene.");
         }
     }
 
