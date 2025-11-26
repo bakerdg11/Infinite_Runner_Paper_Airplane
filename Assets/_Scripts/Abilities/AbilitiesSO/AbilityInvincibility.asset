@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilityInvincibility
   abilityId: invincible
   icon: {fileID: 0}
-  duration: 5
+  duration: 2
   cooldown: 0
-  startingCharges: 2
+  startingCharges: 0
   allowRefreshWhileActive: 0

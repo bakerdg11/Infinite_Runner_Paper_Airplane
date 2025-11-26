@@ -22,6 +22,7 @@ public sealed class AbilityInstance
     public bool active;
     public float timeLeft;
     public int chargesLeft;
+    public float effectiveDuration;
 
     public AbilityInstance(BaseAbility def) { this.def = def; Reset(); }
 

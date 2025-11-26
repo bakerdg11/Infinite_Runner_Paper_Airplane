@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Lanes and Banking")]
     public float laneOffset = 5.5f;
-    public float lateralMoveSpeed = 7.5f;
+    public float lateralMoveSpeed = 3f;
     public float maxBankAngle = 25f;
     public float bankLerpSpeed = 7f;
 

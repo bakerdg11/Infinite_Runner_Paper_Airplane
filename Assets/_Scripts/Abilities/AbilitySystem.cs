@@ -52,7 +52,9 @@ public class AbilitySystem : MonoBehaviour
                 inst.timeLeft -= dt;
                 def.OnTick(ctx, inst, dt);
 
-                float normalized = Mathf.Clamp01(inst.timeLeft / def.duration);
+                float normDenom = (inst.effectiveDuration > 0f) ? inst.effectiveDuration : def.duration;
+                float normalized = Mathf.Clamp01(inst.timeLeft / normDenom);
+
                 HUD.Instance?.SetAbilitySlider(def.abilityId, normalized, active: true);
 
                 if (inst.timeLeft <= 0f)
@@ -90,8 +92,16 @@ public class AbilitySystem : MonoBehaviour
         // start/refresh duration or instant fire
         if (def.duration > 0f)
         {
+            float baseDuration = def.duration;
+            float finalDuration = baseDuration;
+
+            if (_upgrades != null)
+                finalDuration = _upgrades.GetUpgradedDuration(def.abilityId, baseDuration);
+
+            inst.effectiveDuration = finalDuration;
             inst.active = true;
-            inst.timeLeft = def.duration;
+            inst.timeLeft = finalDuration;
+
             def.OnActivate(ctx, inst);
             HUD.Instance?.SetAbilitySlider(def.abilityId, 1f, active: true);
         }
@@ -150,19 +160,28 @@ public class AbilitySystem : MonoBehaviour
         inst.timeLeft = 0f;
     }
 
-    public void BeginNewRun()  // call when respawning/reloading level
+    public void BeginNewRun()
     {
         foreach (var inst in _instances)
         {
             inst.active = false;
             inst.timeLeft = 0f;
 
-            // starting charges from the ScriptableObject (upgrades can add to this later)
-            inst.chargesLeft = Mathf.Max(0, inst.def.startingCharges);
+            int baseCharges = Mathf.Max(0, inst.def.startingCharges);
+
+            int finalCharges = baseCharges;
+
+            if (_upgrades != null)
+            {
+                finalCharges = _upgrades.GetStartingAmmo(inst.def.abilityId, baseCharges);
+            }
+
+            inst.chargesLeft = finalCharges;
         }
 
-        PushAllAmmoToHud(); // <-- show starting charges on the HUD
+        PushAllAmmoToHud();
     }
+
 
     public void PushAllAmmoToHud()
     {

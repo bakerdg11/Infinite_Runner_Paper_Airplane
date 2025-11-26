@@ -6,7 +6,7 @@ public class AbilityMissile : BaseAbility
     private void OnValidate()
     {
         duration = 0f;               // instant
-        if (startingCharges <= 0) startingCharges = 3; // default ammo
+        if (startingCharges <= 0) startingCharges = 0; // default ammo
     }
 
     public override void OnActivate(in AbilityContext ctx, AbilityInstance inst)

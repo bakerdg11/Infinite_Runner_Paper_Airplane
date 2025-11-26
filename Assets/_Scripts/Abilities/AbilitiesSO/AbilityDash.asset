@@ -16,5 +16,5 @@ MonoBehaviour:
   icon: {fileID: 0}
   duration: 0.4
   cooldown: 0
-  startingCharges: 3
+  startingCharges: 1
   allowRefreshWhileActive: 0

@@ -21380,29 +21380,45 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradesManager
   edrCurrentLevel: 0
-  edrMaxLevel: 15
-  lcsCurrentLevel: 0
-  lcsMaxLevel: 15
+  edrMaxLevel: 9
   edrReductionPerLevel: 0.1
   edrMinMultiplier: 0.1
-  lcsDeltaPerLevel: 0.6
-  lcsMaxAbsolute: 20
+  lcsCurrentLevel: 0
+  lcsMaxLevel: 10
+  lcsDeltaPerLevel: 0.5
+  lcsMaxAbsolute: 8
+  pedDurationBonusPerLevel: 0.5
+  boostDurationBonusPerLevel: 0.5
+  invDurationBonusPerLevel: 0.5
+  pedMaxDurationMultiplier: 2.5
+  boostMaxDurationMultiplier: 2.5
+  invMaxDurationMultiplier: 2.5
   pedLengthCurrentLevel: 0
-  pedLengthMaxLevel: 2
+  pedLengthMaxLevel: 6
   pedAmmoCurrentLevel: 0
-  pedAmmoMaxLevel: 3
+  pedAmmoMaxLevel: 2
   boostLengthCurrentLevel: 0
-  boostLengthMaxLevel: 2
+  boostLengthMaxLevel: 6
   boostAmmoCurrentLevel: 0
   boostAmmoMaxLevel: 3
   invincibilityLengthCurrentLevel: 0
-  invincibilityLengthMaxLevel: 2
+  invincibilityLengthMaxLevel: 6
   invincibilityAmmoCurrentLevel: 0
-  invincibilityAmmoMaxLevel: 3
+  invincibilityAmmoMaxLevel: 5
   dashAmmoCurrentLevel: 0
-  dashAmmoMaxLevel: 2
+  dashAmmoMaxLevel: 4
   missileAmmoCurrentLevel: 0
-  missileAmmoMaxLevel: 6
+  missileAmmoMaxLevel: 10
+  pedAmmoPerLevel: 1
+  pedAmmoMaxAbsolute: 2
+  boostAmmoPerLevel: 1
+  boostAmmoMaxAbsolute: 3
+  invAmmoPerLevel: 1
+  invAmmoMaxAbsolute: 5
+  dashAmmoPerLevel: 1
+  dashAmmoMaxAbsolute: 5
+  missileAmmoPerLevel: 1
+  missileAmmoMaxAbsolute: 10
 --- !u!1 &1725482086
 GameObject:
   m_ObjectHideFlags: 0

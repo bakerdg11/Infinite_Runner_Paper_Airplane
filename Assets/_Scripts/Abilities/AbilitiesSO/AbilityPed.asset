@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilityPed
   abilityId: pauseenergy
   icon: {fileID: 0}
-  duration: 5
+  duration: 2
   cooldown: 0
-  startingCharges: 4
+  startingCharges: 1
   allowRefreshWhileActive: 0

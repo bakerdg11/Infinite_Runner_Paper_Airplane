@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilityBoost
   abilityId: boost
   icon: {fileID: 0}
-  duration: 3
+  duration: 2
   cooldown: 0
-  startingCharges: 2
+  startingCharges: 0
   allowRefreshWhileActive: 0
