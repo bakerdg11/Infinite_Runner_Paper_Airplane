@@ -73,6 +73,8 @@ public class PersistentMenuManager : MonoBehaviour
 
         menu.SetActive(true);
         menuStack.Push(menu);
+
+        SoundManager.Instance.PlayButtonForwardClick();
     }
 
     public void Back()
@@ -98,6 +100,8 @@ public class PersistentMenuManager : MonoBehaviour
                 Debug.Log("Back() ? HUD (fallback after stack empty)");
             }
         }
+
+        SoundManager.Instance.PlayButtonBackClick();
     }
 
     public void CloseAllMenus()

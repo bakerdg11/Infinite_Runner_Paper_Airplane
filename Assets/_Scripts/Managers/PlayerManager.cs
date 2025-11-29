@@ -129,4 +129,5 @@ public class PlayerManager : MonoBehaviour
         if (statsManager == null) Debug.LogWarning("[PlayerManager] StatsManager.Instance not found.");
         if (upgradesManager == null) Debug.LogWarning("[PlayerManager] UpgradesManager.Instance not found.");
     }
+
 }

@@ -8,10 +8,12 @@ public class AbilityPed : BaseAbility
     public override void OnActivate(in AbilityContext ctx, AbilityInstance inst)
     {
         ctx.Ability.SetEnergyDepletionPaused(true);
+        SoundManager.Instance.PlayPEDActivateSound();
     }
 
     public override void OnDeactivate(in AbilityContext ctx, AbilityInstance inst, bool cancelled)
     {
         ctx.Ability.SetEnergyDepletionPaused(false);
+        SoundManager.Instance.PlayPEDDeactivateSound();
     }
 }

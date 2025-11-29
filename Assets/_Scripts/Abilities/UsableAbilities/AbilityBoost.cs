@@ -8,6 +8,7 @@ public class AbilityBoost : BaseAbility
     public override void OnActivate(in AbilityContext ctx, AbilityInstance inst)
     {
         ctx.Player.AirplaneBoost();
+        SoundManager.Instance.PlayBoostSound();
     }
 
     public override void OnDeactivate(in AbilityContext ctx, AbilityInstance inst, bool cancelled)

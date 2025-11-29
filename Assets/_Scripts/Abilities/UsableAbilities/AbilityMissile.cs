@@ -12,5 +12,6 @@ public class AbilityMissile : BaseAbility
     public override void OnActivate(in AbilityContext ctx, AbilityInstance inst)
     {
         ctx.Player.FireMissile();
+        SoundManager.Instance.PlayMissileSound();
     }
 }

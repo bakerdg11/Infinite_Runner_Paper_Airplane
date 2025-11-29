@@ -79,6 +79,20 @@ public class StatsManager : MonoBehaviour
         BindRuntimeRefs();
     }
 
+    // ================= SAVE / LOAD HOOKS =================
+    public void LoadFromGameData(GameData data)
+    {
+        // Read from save
+        //totalCredits = data.totalCredits; --------------------------------------------------------------------------- THis too
+        //totalAbilityPoints = data.totalAbilityPoints;
+    }
+    public void SaveToGameData(GameData data)
+    {
+        // Write into save
+        //data.totalCredits = totalCredits;          ------------------------------------------------------------------- This too
+        //data.totalAbilityPoints = totalAbilityPoints;
+    }
+
 
     void Update()
     {

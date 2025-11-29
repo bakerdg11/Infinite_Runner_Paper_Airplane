@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CameraManager : MonoBehaviour
 {
+    public static CameraManager Instance { get; private set; }
+    Camera _camera;
+
     public Transform paperAirplane;     // will auto-fill from the player
     public PlayerController player;     // will auto-fill from PlayerManager
     public Vector3 offset = new Vector3(0, 2, -4);
@@ -22,6 +26,59 @@ public class CameraManager : MonoBehaviour
     float currentFollowSpeed;
     float launchT;  // 0→1
     float yawVel;   // for SmoothDampAngle
+
+    private void Awake()
+    {
+        // Singleton pattern: keep only one CameraManager + Camera alive
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);   // another instance already exists, kill this one
+            return;
+        }
+
+        Instance = this;
+        _camera = GetComponent<Camera>();     // should be on the same GameObject as CameraManager
+        DontDestroyOnLoad(gameObject);        // ⬅ this keeps the camera across scenes
+
+        // Listen for scene loads so we can clean up any extra cameras
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+    }
+
+    // ⬅ NEW: called whenever a new scene has finished loading
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Ensure this is still our active instance
+        if (Instance != this) return;
+
+        // Find all cameras in the scene
+        var allCameras = FindObjectsOfType<Camera>();
+
+        foreach (var cam in allCameras)
+        {
+            // If it's NOT our persistent camera, destroy it
+            if (cam != _camera)
+            {
+                Destroy(cam.gameObject);
+            }
+        }
+
+        // After level loads, your LateUpdate logic will re-hook the player from PlayerManager
+        // thanks to this block already in your script:
+        //
+        // if ((player == null || paperAirplane == null) && PlayerManager.Instance != null)
+        // {
+        //     player = PlayerManager.Instance.PlayerController;
+        //     paperAirplane = player != null ? player.transform : null;
+        // }
+    }
 
     void Start()
     {

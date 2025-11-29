@@ -227,6 +227,7 @@ public class HUD : MonoBehaviour
     {
         if (!EnsureAbilitySystem()) return;      // guard against null
         abilitySystem.TryActivate("dash");
+
     }
 
     public void OnPressBoost()

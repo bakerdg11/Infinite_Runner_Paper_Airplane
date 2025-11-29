@@ -9,6 +9,7 @@ public class AbilityDash : BaseAbility
     {
         ctx.Player.AirplaneDash();
         ctx.Ability.PlayerIsDashing(true);
+        SoundManager.Instance.PlayDashSound();
     }
 
     public override void OnDeactivate(in AbilityContext ctx, AbilityInstance inst, bool cancelled)

@@ -8,6 +8,7 @@ public class AbilityInvincibility : BaseAbility
     public override void OnActivate(in AbilityContext ctx, AbilityInstance inst)
     {
         ctx.Ability.PlayerIsInvincible(true);
+        SoundManager.Instance.PlayInvincibility();
     }
 
     public override void OnDeactivate(in AbilityContext ctx, AbilityInstance inst, bool cancelled)
