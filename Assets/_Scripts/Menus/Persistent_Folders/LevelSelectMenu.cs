@@ -52,6 +52,7 @@ public class LevelSelectMenu : MonoBehaviour
     private void BackToMain()
     {
         PersistentMenuManager.Instance.HideLevelSelectPanel();
+        SoundManager.Instance.PlayButtonBackClick();
     }
 
 

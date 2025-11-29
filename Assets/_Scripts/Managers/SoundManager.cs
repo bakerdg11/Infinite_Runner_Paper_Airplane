@@ -6,12 +6,6 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance { get; private set; }
 
-
-
-
-
-
-
     [Header("Audio Sources")]
     [Tooltip("Music source (loops background tracks)")]
     public AudioSource musicSource;
@@ -27,6 +21,9 @@ public class SoundManager : MonoBehaviour
     [Header("SFX Clips")]
     public AudioClip buttonForwardClick;
     public AudioClip buttonBackClick;
+    public AudioClip upgradeClick;
+    public AudioClip creditPickup;
+
     public AudioClip pedActivate;
     public AudioClip pedDeactivate;
     public AudioClip boostActivate;
@@ -109,10 +106,17 @@ public class SoundManager : MonoBehaviour
     {
         PlaySFX(buttonForwardClick);
     }
-
     public void PlayButtonBackClick()
     {
         PlaySFX(buttonBackClick);
+    }
+    public void PlayUpgradeSound()
+    {
+        PlaySFX(upgradeClick);
+    }
+    public void PlayCreditPickupSound()
+    {
+        PlaySFX(creditPickup);
     }
     public void PlayPEDActivateSound()
     {

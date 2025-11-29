@@ -68,12 +68,14 @@ public class UpgradeStatsMenu : MonoBehaviour
     {
         upgradesManager.UpgradeEnergyDepletionRate();
         UpdateStatsUpgradesMenuNumbers();
+        SoundManager.Instance.PlayUpgradeSound();
     }
 
     private void OnUpgradeLaneChangeSpeedButtonPressed()
     {
         upgradesManager.UpgradeLaneChangeSpeed();
         UpdateStatsUpgradesMenuNumbers();
+        SoundManager.Instance.PlayUpgradeSound();
     }
 
 

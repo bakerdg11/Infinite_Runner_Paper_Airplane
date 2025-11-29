@@ -57,6 +57,8 @@ public class Coin : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
+        SoundManager.Instance.PlayCreditPickupSound();
+
         // Grant credits
         int amount = (activeDef != null) ? activeDef.creditValue : 1;
         StatsManager.Instance?.UpdatePickupCredits(amount);

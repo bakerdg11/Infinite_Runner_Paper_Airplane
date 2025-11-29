@@ -12258,6 +12258,8 @@ MonoBehaviour:
   level1Music: {fileID: 0}
   buttonForwardClick: {fileID: 8300000, guid: a3fac10a56c78254580e8b067c19e564, type: 3}
   buttonBackClick: {fileID: 8300000, guid: d48713fd5defb1c4880c1b7481bd1e17, type: 3}
+  upgradeClick: {fileID: 8300000, guid: fc3e728095c1f6546b7dfd26c6108c3f, type: 3}
+  creditPickup: {fileID: 8300000, guid: 96796b1c2011011448be3b8ddc825239, type: 3}
   pedActivate: {fileID: 8300000, guid: 2ccdb9333d08c4b43b75f3dcff19c764, type: 3}
   pedDeactivate: {fileID: 8300000, guid: 22387bf7d2e9bff47a3ab9922c711ea3, type: 3}
   boostActivate: {fileID: 8300000, guid: dc0e84bf6e0af0946a2a63e59e1fac61, type: 3}

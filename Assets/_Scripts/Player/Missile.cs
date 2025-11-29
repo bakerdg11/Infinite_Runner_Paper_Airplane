@@ -46,6 +46,7 @@ public class Missile : MonoBehaviour
         {
             Destroy(other.gameObject); // destroy obstacle
             Destroy(gameObject);       // destroy missile
+            SoundManager.Instance.PlayMissileExplosion();
         }
     }
 

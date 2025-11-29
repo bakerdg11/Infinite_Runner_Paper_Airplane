@@ -125,12 +125,14 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
     {
         upgradesManager.UpgradePauseEnergyDepletionLength();
         UpdateAbilitiesUpgradesMenuStats();
+        SoundManager.Instance.PlayUpgradeSound();
     }
 
     private void OnUpgradePauseEnergyDepletionAmmoButtonPressed()
     {
         upgradesManager.UpgradePauseEnergyDepletionAmmo();
         UpdateAbilitiesUpgradesMenuStats();
+        SoundManager.Instance.PlayUpgradeSound();
     }
 
     // ------------------------------------------------------------------------Boost Ability
@@ -138,12 +140,14 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
     {
         upgradesManager.UpgradeBoostLength();
         UpdateAbilitiesUpgradesMenuStats();
+        SoundManager.Instance.PlayUpgradeSound();
     }
 
     private void OnUpgradeBoostAmmoButtonPressed()
     {
         upgradesManager.UpgradeBoostAmmo();
         UpdateAbilitiesUpgradesMenuStats();
+        SoundManager.Instance.PlayUpgradeSound();
     }
 
     // ------------------------------------------------------------------------Invincibility Ability
@@ -151,12 +155,14 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
     {
         upgradesManager.UpgradeInvincibilityLength();
         UpdateAbilitiesUpgradesMenuStats();
+        SoundManager.Instance.PlayUpgradeSound();
     }
 
     private void OnUpgradeInvincibilityAmmoButtonPressed()
     {
         upgradesManager.UpgradeInvincibilityAmmo();
         UpdateAbilitiesUpgradesMenuStats();
+        SoundManager.Instance.PlayUpgradeSound();
     }
 
     // -------------------------------------------------------------------------Dash Ability
@@ -164,6 +170,7 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
     {
         upgradesManager.UpgradeDashAmmo();
         UpdateAbilitiesUpgradesMenuStats();
+        SoundManager.Instance.PlayUpgradeSound();
     }
 
     // -------------------------------------------------------------------------Missile Depletion
@@ -171,6 +178,7 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
     {
         upgradesManager.UpgradeMissileAmmo();
         UpdateAbilitiesUpgradesMenuStats();
+        SoundManager.Instance.PlayUpgradeSound();
     }
 
 

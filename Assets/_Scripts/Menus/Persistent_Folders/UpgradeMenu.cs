@@ -78,6 +78,7 @@ public class UpgradesMenu : MonoBehaviour
     {
         statsManager.BuyAbilityPoints();
         UpdateUpgradesMenuNumbers();
+        SoundManager.Instance.PlayUpgradeSound();
     }
 
 

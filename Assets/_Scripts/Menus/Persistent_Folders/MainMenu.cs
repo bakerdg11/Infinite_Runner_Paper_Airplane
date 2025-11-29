@@ -25,6 +25,7 @@ public class MainMenu : MonoBehaviour
     private void OnSelectLevelButtonPressed()
     {
         PersistentMenuManager.Instance.ShowLevelSelectPanel();
+        SoundManager.Instance.PlayButtonForwardClick();
     }
 
     private void OnUpgradesButtonPressed()
