@@ -181,11 +181,8 @@ public class PlayerController : MonoBehaviour
         Time.timeScale = 0f;
         rb.linearVelocity = Vector3.zero;
 
-        //DisableGravity();
-        //NotLaunched();
-
         StatsManager.Instance?.FinalizeRun();
-
+        SoundManager.Instance?.PlayCrashedSound();
         PersistentMenuManager.Instance.OpenCrashMenu();
     }
 

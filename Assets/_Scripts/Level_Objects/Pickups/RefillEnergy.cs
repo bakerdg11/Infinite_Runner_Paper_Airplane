@@ -9,6 +9,7 @@ public class RefillEnergy : MonoBehaviour
 
         var pc = PlayerManager.Instance?.PlayerController;
         pc?.RefillEnergy();
+        SoundManager.Instance?.PlayEnergyRefillSound();
         Destroy(gameObject);
     }
 }

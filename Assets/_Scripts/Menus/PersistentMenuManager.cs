@@ -74,7 +74,11 @@ public class PersistentMenuManager : MonoBehaviour
         menu.SetActive(true);
         menuStack.Push(menu);
 
-        SoundManager.Instance.PlayButtonForwardClick();
+        if (menu != crashMenu)
+        {
+            SoundManager.Instance.PlayButtonForwardClick();
+        }
+
     }
 
     public void Back()

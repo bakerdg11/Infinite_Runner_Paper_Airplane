@@ -12254,12 +12254,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
   musicSource: {fileID: 0}
   sfxSource: {fileID: 0}
-  mainMenuMusic: {fileID: 0}
-  level1Music: {fileID: 0}
+  mainMenuMusic: {fileID: 8300000, guid: d8f6490498a62504fa1b9d299c89bac2, type: 3}
+  level1Music: {fileID: 8300000, guid: b35b8c1aafbe4bb42be55683b0b4c3ba, type: 3}
   buttonForwardClick: {fileID: 8300000, guid: a3fac10a56c78254580e8b067c19e564, type: 3}
   buttonBackClick: {fileID: 8300000, guid: d48713fd5defb1c4880c1b7481bd1e17, type: 3}
   upgradeClick: {fileID: 8300000, guid: fc3e728095c1f6546b7dfd26c6108c3f, type: 3}
   creditPickup: {fileID: 8300000, guid: 96796b1c2011011448be3b8ddc825239, type: 3}
+  energyRefill: {fileID: 8300000, guid: 1491d2e71fec6c0498418db0413e5632, type: 3}
+  crashedSound: {fileID: 8300000, guid: 7792a31aa1c22df4291d82d9258722e8, type: 3}
   pedActivate: {fileID: 8300000, guid: 2ccdb9333d08c4b43b75f3dcff19c764, type: 3}
   pedDeactivate: {fileID: 8300000, guid: 22387bf7d2e9bff47a3ab9922c711ea3, type: 3}
   boostActivate: {fileID: 8300000, guid: dc0e84bf6e0af0946a2a63e59e1fac61, type: 3}

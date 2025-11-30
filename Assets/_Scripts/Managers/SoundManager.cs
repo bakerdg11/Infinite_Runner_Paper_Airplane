@@ -24,6 +24,9 @@ public class SoundManager : MonoBehaviour
     public AudioClip upgradeClick;
     public AudioClip creditPickup;
 
+    public AudioClip energyRefill;
+    public AudioClip crashedSound;
+
     public AudioClip pedActivate;
     public AudioClip pedDeactivate;
     public AudioClip boostActivate;
@@ -67,11 +70,11 @@ public class SoundManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "MainMenu")
+        if (scene.name == "1.MainMenu")
         {
             PlayMusic(mainMenuMusic);
         }
-        else if (scene.name == "Level1")
+        else if (scene.name == "2.Level1")
         {
             PlayMusic(level1Music);
         }
@@ -117,6 +120,14 @@ public class SoundManager : MonoBehaviour
     public void PlayCreditPickupSound()
     {
         PlaySFX(creditPickup);
+    }
+    public void PlayEnergyRefillSound()
+    {
+        PlaySFX(energyRefill);
+    }
+    public void PlayCrashedSound()
+    {
+        PlaySFX(crashedSound);
     }
     public void PlayPEDActivateSound()
     {
