@@ -44,6 +44,11 @@ public class StatsManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         SceneManager.sceneLoaded += OnSceneLoaded;
+
+        if (SaveManager.Instance != null && SaveManager.Instance.CurrentData != null)
+        {
+            SaveManager.Instance.ApplyLoadedDataToManagers();
+        }
     }
 
     private void OnDestroy()
@@ -83,14 +88,14 @@ public class StatsManager : MonoBehaviour
     public void LoadFromGameData(GameData data)
     {
         // Read from save
-        //totalCredits = data.totalCredits; --------------------------------------------------------------------------- THis too
-        //totalAbilityPoints = data.totalAbilityPoints;
+        totalCredits = data.totalCredits;
+        totalAbilityPoints = data.totalAbilityPoints;
     }
     public void SaveToGameData(GameData data)
     {
         // Write into save
-        //data.totalCredits = totalCredits;          ------------------------------------------------------------------- This too
-        //data.totalAbilityPoints = totalAbilityPoints;
+        data.totalCredits = totalCredits;
+        data.totalAbilityPoints = totalAbilityPoints;
     }
 
 

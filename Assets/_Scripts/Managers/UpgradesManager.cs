@@ -85,24 +85,6 @@ public class UpgradesManager : MonoBehaviour
     public int missileAmmoMaxAbsolute = 10;
 
 
-
-
-    /*
-    [Header("Upgarded Stats/Abilities For Player")]
-    public float upgradedEnergyDepletionRate;
-    public float upgradedLaneChangeSpeed;
-    public float upgradedPauseEnergyDepletionLength;
-    public float upgradedBoostLength;
-    public float upgradedInvincibilityLength;
-
-    [Header("Upgraded StatsAbilieis Ammo For HUD")]
-    public int upgradedPauseEnergyDepletionAmmo;
-    public int upgradedBoostAmmo;
-    public int upgradedInvincibilityAmmo;
-    public int upgradedDashAmmo;
-    public int upgradedMissileAmmo;
-    */
-
     private void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -110,6 +92,11 @@ public class UpgradesManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         SceneManager.sceneLoaded += OnSceneLoaded;
+
+        if (SaveManager.Instance != null && SaveManager.Instance.CurrentData != null)
+        {
+            SaveManager.Instance.ApplyLoadedDataToManagers();
+        }
     }
     void OnDestroy()
     {
@@ -118,6 +105,68 @@ public class UpgradesManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
 
+    }
+
+
+    public void SaveToGameData(GameData data)
+    {
+        data.edrCurrentLevel = edrCurrentLevel;
+        data.edrMaxLevel = edrMaxLevel;
+        data.lcsCurrentLevel = lcsCurrentLevel;
+        data.lcsMaxLevel = lcsMaxLevel;
+
+        data.pedLengthCurrentLevel = pedLengthCurrentLevel;
+        data.pedLengthMaxLevel = pedLengthMaxLevel;
+        data.pedAmmoCurrentLevel = pedAmmoCurrentLevel;
+        data.pedAmmoMaxLevel = pedAmmoMaxLevel;
+
+        data.boostLengthCurrentLevel = boostLengthCurrentLevel;
+        data.boostLengthMaxLevel = boostLengthMaxLevel;
+        data.boostAmmoCurrentLevel = boostAmmoCurrentLevel;
+        data.boostAmmoMaxLevel = boostAmmoMaxLevel;
+
+        data.invincibilityLengthCurrentLevel = invincibilityLengthCurrentLevel;
+        data.invincibilityLengthMaxLevel = invincibilityLengthMaxLevel;
+        data.invincibilityAmmoCurrentLevel = invincibilityAmmoCurrentLevel;
+        data.invincibilityAmmoMaxLevel = invincibilityAmmoMaxLevel;
+
+        data.dashAmmoCurrentLevel = dashAmmoCurrentLevel;
+        data.dashAmmoMaxLevel = dashAmmoMaxLevel;
+
+        data.missileAmmoCurrentLevel = missileAmmoCurrentLevel;
+        data.missileAmmoMaxLevel = missileAmmoMaxLevel;
+    }
+
+    public void LoadFromGameData(GameData data)
+    {
+        edrCurrentLevel = data.edrCurrentLevel;
+        edrMaxLevel = data.edrMaxLevel;
+        lcsCurrentLevel = data.lcsCurrentLevel;
+        lcsMaxLevel = data.lcsMaxLevel;
+
+        pedLengthCurrentLevel = data.pedLengthCurrentLevel;
+        pedLengthMaxLevel = data.pedLengthMaxLevel;
+        pedAmmoCurrentLevel = data.pedAmmoCurrentLevel;
+        pedAmmoMaxLevel = data.pedAmmoMaxLevel;
+
+        boostLengthCurrentLevel = data.boostLengthCurrentLevel;
+        boostLengthMaxLevel = data.boostLengthMaxLevel;
+        boostAmmoCurrentLevel = data.boostAmmoCurrentLevel;
+        boostAmmoMaxLevel = data.boostAmmoMaxLevel;
+
+        invincibilityLengthCurrentLevel = data.invincibilityLengthCurrentLevel;
+        invincibilityLengthMaxLevel = data.invincibilityLengthMaxLevel;
+        invincibilityAmmoCurrentLevel = data.invincibilityAmmoCurrentLevel;
+        invincibilityAmmoMaxLevel = data.invincibilityAmmoMaxLevel;
+
+        dashAmmoCurrentLevel = data.dashAmmoCurrentLevel;
+        dashAmmoMaxLevel = data.dashAmmoMaxLevel;
+
+        missileAmmoCurrentLevel = data.missileAmmoCurrentLevel;
+        missileAmmoMaxLevel = data.missileAmmoMaxLevel;
+
+        // Then recalc any derived values:
+        //ApplyUpgradedStats();
     }
 
 

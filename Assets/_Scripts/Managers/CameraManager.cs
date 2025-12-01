@@ -150,4 +150,50 @@ public class CameraManager : MonoBehaviour
             transform.rotation = rot * pitchRot;
         }
     }
+
+    public void ResetCameraImmediate()
+    {
+        if (player == null || paperAirplane == null)
+            return;
+
+        // Reset follow state
+        currentFollowSpeed = preLaunchFollowSpeed;
+        launchT = 0f;
+        yawVel = 0f;
+
+        // Put camera at desired offset behind the player
+        Vector3 basePos = new Vector3(
+            paperAirplane.position.x,
+            paperAirplane.position.y + offset.y,
+            paperAirplane.position.z + offset.z
+        );
+        transform.position = basePos;
+
+        // Rebuild the same look target as in LateUpdate
+        Vector3 fwdFlat = paperAirplane.forward;
+        fwdFlat.y = 0f;
+        if (fwdFlat.sqrMagnitude > 0.0001f)
+            fwdFlat.Normalize();
+
+        float blendedX = Mathf.Lerp(transform.position.x, paperAirplane.position.x, lookHorizontalWeight);
+        Vector3 lookAtPoint = new Vector3(
+            blendedX,
+            paperAirplane.position.y + lookAtVerticalOffset,
+            paperAirplane.position.z
+        ) + fwdFlat * lookAhead;
+
+        Vector3 toTarget = lookAtPoint - transform.position;
+        if (toTarget.sqrMagnitude > 0.0001f)
+        {
+            float targetYaw = Mathf.Atan2(toTarget.x, toTarget.z) * Mathf.Rad2Deg;
+            float targetPitch = -Mathf.Atan2(
+                toTarget.y,
+                new Vector2(toTarget.x, toTarget.z).magnitude
+            ) * Mathf.Rad2Deg;
+
+            Quaternion yawRot = Quaternion.Euler(0f, targetYaw, 0f);
+            Quaternion pitchRot = Quaternion.Euler(targetPitch, 0f, 0f);
+            transform.rotation = yawRot * pitchRot;
+        }
+    }
 }

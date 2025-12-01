@@ -17242,8 +17242,8 @@ MonoBehaviour:
   spawnPoint: {fileID: 0}
   pickupCredits: 0
   pickupCreditsText: {fileID: 2119591241}
-  totalCredits: 200
-  totalAbilityPoints: 50
+  totalCredits: 0
+  totalAbilityPoints: 0
   distanceTravelled: 0
   distanceTravelledText: {fileID: 155347432}
   distanceTravelledCredits: 0

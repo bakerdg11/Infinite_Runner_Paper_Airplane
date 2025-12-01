@@ -17,39 +17,49 @@ public class SaveManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // Load from disk
-        //CurrentData = SaveSystem.Load(); -------------------------------------------------------- Remove this to make loading work
+        // Always load (or create a new GameData if no file exists)
+        CurrentData = SaveSystem.Load();
 
-        // Push loaded data into managers that exist
+        // Try to push into managers that already exist
         ApplyLoadedDataToManagers();
     }
 
-    private void ApplyLoadedDataToManagers()
+    // Make this PUBLIC so managers can call it later if they spawn after us
+    public void ApplyLoadedDataToManagers()
     {
+        if (CurrentData == null)
+            CurrentData = new GameData();
+
         if (StatsManager.Instance != null)
         {
             StatsManager.Instance.LoadFromGameData(CurrentData);
         }
 
+        if (UpgradesManager.Instance != null)
+        {
+            UpgradesManager.Instance.LoadFromGameData(CurrentData);
+        }
+
         // Later:
-        // if (UpgradesManager.Instance != null)
-        //     UpgradesManager.Instance.LoadFromGameData(CurrentData);
-        // if (SettingsManager.Instance != null)
-        //     SettingsManager.Instance.LoadFromGameData(CurrentData);
+        // SettingsManager.Instance?.LoadFromGameData(CurrentData);
     }
 
     public void SaveGame()
     {
+        if (CurrentData == null)
+            CurrentData = new GameData();
+
         // Ask managers to write their stuff into CurrentData
         if (StatsManager.Instance != null)
         {
             StatsManager.Instance.SaveToGameData(CurrentData);
         }
 
-        // Later: add more managers here
-        // UpgradesManager.Instance?.SaveToGameData(CurrentData);
+        if (UpgradesManager.Instance != null)
+        {
+            UpgradesManager.Instance.SaveToGameData(CurrentData);
+        }
 
-        // Now write to disk
         SaveSystem.Save(CurrentData);
     }
 
@@ -58,14 +68,6 @@ public class SaveManager : MonoBehaviour
         SaveGame();
     }
 }
-
-
-
-
-
-
-
-
 
 
 /* Tell SaveManager to save on any type of change. 

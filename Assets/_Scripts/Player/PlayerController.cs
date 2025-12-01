@@ -209,6 +209,8 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(rot);
 
         abilitySystem.BeginNewRun();
+
+        CameraManager.Instance?.ResetCameraImmediate();
     }
 
 

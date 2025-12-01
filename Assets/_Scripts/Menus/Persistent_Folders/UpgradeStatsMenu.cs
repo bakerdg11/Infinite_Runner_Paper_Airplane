@@ -69,6 +69,7 @@ public class UpgradeStatsMenu : MonoBehaviour
         upgradesManager.UpgradeEnergyDepletionRate();
         UpdateStatsUpgradesMenuNumbers();
         SoundManager.Instance.PlayUpgradeSound();
+        SaveManager.Instance?.SaveGame();
     }
 
     private void OnUpgradeLaneChangeSpeedButtonPressed()
@@ -76,6 +77,7 @@ public class UpgradeStatsMenu : MonoBehaviour
         upgradesManager.UpgradeLaneChangeSpeed();
         UpdateStatsUpgradesMenuNumbers();
         SoundManager.Instance.PlayUpgradeSound();
+        SaveManager.Instance?.SaveGame();
     }
 
 

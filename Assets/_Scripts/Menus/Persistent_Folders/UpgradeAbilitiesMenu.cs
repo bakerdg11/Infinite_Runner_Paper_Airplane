@@ -126,6 +126,7 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
         upgradesManager.UpgradePauseEnergyDepletionLength();
         UpdateAbilitiesUpgradesMenuStats();
         SoundManager.Instance.PlayUpgradeSound();
+        SaveManager.Instance?.SaveGame();
     }
 
     private void OnUpgradePauseEnergyDepletionAmmoButtonPressed()
@@ -133,6 +134,7 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
         upgradesManager.UpgradePauseEnergyDepletionAmmo();
         UpdateAbilitiesUpgradesMenuStats();
         SoundManager.Instance.PlayUpgradeSound();
+        SaveManager.Instance?.SaveGame();
     }
 
     // ------------------------------------------------------------------------Boost Ability
@@ -141,6 +143,7 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
         upgradesManager.UpgradeBoostLength();
         UpdateAbilitiesUpgradesMenuStats();
         SoundManager.Instance.PlayUpgradeSound();
+        SaveManager.Instance?.SaveGame();
     }
 
     private void OnUpgradeBoostAmmoButtonPressed()
@@ -148,6 +151,7 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
         upgradesManager.UpgradeBoostAmmo();
         UpdateAbilitiesUpgradesMenuStats();
         SoundManager.Instance.PlayUpgradeSound();
+        SaveManager.Instance?.SaveGame();
     }
 
     // ------------------------------------------------------------------------Invincibility Ability
@@ -156,6 +160,7 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
         upgradesManager.UpgradeInvincibilityLength();
         UpdateAbilitiesUpgradesMenuStats();
         SoundManager.Instance.PlayUpgradeSound();
+        SaveManager.Instance?.SaveGame();
     }
 
     private void OnUpgradeInvincibilityAmmoButtonPressed()
@@ -163,6 +168,7 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
         upgradesManager.UpgradeInvincibilityAmmo();
         UpdateAbilitiesUpgradesMenuStats();
         SoundManager.Instance.PlayUpgradeSound();
+        SaveManager.Instance?.SaveGame();
     }
 
     // -------------------------------------------------------------------------Dash Ability
@@ -171,6 +177,7 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
         upgradesManager.UpgradeDashAmmo();
         UpdateAbilitiesUpgradesMenuStats();
         SoundManager.Instance.PlayUpgradeSound();
+        SaveManager.Instance?.SaveGame();
     }
 
     // -------------------------------------------------------------------------Missile Depletion
@@ -179,6 +186,7 @@ public class UpgradeAbilitiesMenu : MonoBehaviour
         upgradesManager.UpgradeMissileAmmo();
         UpdateAbilitiesUpgradesMenuStats();
         SoundManager.Instance.PlayUpgradeSound();
+        SaveManager.Instance?.SaveGame();
     }
 
 
