@@ -1,17 +1,19 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class CoinSpawner : MonoBehaviour
 {
+    public static CoinSpawner Instance { get; private set; }   // <-- add this
+
     [Header("Definitions (assign your SOs)")]
     public CoinDefinition copperDef;
     public CoinDefinition silverDef;
     public CoinDefinition goldDef;
 
     [Header("Fixed per-level counts")]
-    [Min(0)] public int copperCount = 11;
-    [Min(0)] public int silverCount = 3;
+    [Min(0)] public int copperCount = 10;
+    [Min(0)] public int silverCount = 2;
     [Min(0)] public int goldCount = 1;
 
     [Header("Spawn Point Tag")]
@@ -21,23 +23,32 @@ public class CoinSpawner : MonoBehaviour
     private readonly List<Transform> _spawnPoints = new();
     private readonly List<GameObject> _liveCoins = new();
     private string _currentScene = "";
-    //private bool _spawnedThisScene = false;
 
     private void Awake()
     {
+        // singleton (since this is DontDestroyOnLoad)
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDestroy()
     {
+        if (Instance == this)
+            Instance = null;
+
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         _currentScene = scene.name;
-        //_spawnedThisScene = false;
 
         // Clear any leftovers (e.g., returning from another scene)
         DespawnAll();
@@ -48,14 +59,12 @@ public class CoinSpawner : MonoBehaviour
         // Collect spawn points in this scene and spawn once
         RefreshSpawnPoints();
         SpawnFixedSet();
-        //_spawnedThisScene = true;
     }
 
     private void RefreshSpawnPoints()
     {
         _spawnPoints.Clear();
 
-        // include inactive objects, then filter by tag
         var all = FindObjectsByType<Transform>(
             FindObjectsInactive.Include,
             FindObjectsSortMode.None
@@ -68,14 +77,9 @@ public class CoinSpawner : MonoBehaviour
 
     private void SpawnFixedSet()
     {
-        // Build the desired sequence: e.g., [G, S, S, S, C...]
         var plan = BuildPlan();
-        if (plan.Count == 0 || _spawnPoints.Count == 0)
-        {
-            return;
-        }
+        if (plan.Count == 0 || _spawnPoints.Count == 0) return;
 
-        // Shuffle both the plan and the points so placement looks random
         Shuffle(plan);
         Shuffle(_spawnPoints);
 
@@ -90,7 +94,7 @@ public class CoinSpawner : MonoBehaviour
             }
 
             var p = _spawnPoints[i];
-            var coin = Instantiate(def.coinPrefab, p.position, p.rotation, p); // parent to point
+            var coin = Instantiate(def.coinPrefab, p.position, p.rotation, p);
             _liveCoins.Add(coin);
         }
 
@@ -113,12 +117,19 @@ public class CoinSpawner : MonoBehaviour
     {
         for (int i = _liveCoins.Count - 1; i >= 0; i--)
         {
-            if (_liveCoins[i] != null) Destroy(_liveCoins[i]);
+            if (_liveCoins[i] != null)
+                Destroy(_liveCoins[i]);
         }
         _liveCoins.Clear();
     }
 
-    // Fisher�Yates shuffle
+    // 🔹 PUBLIC method you can call when you crash
+    public void ClearCoinsInCurrentScene()
+    {
+        DespawnAll();
+    }
+
+    // Fisher–Yates shuffle
     private static void Shuffle<T>(IList<T> list)
     {
         for (int i = list.Count - 1; i > 0; i--)
@@ -135,6 +146,5 @@ public class CoinSpawner : MonoBehaviour
         DespawnAll();
         RefreshSpawnPoints();
         SpawnFixedSet();
-        //_spawnedThisScene = true;
     }
 }

@@ -119,6 +119,7 @@ public class PersistentMenuManager : MonoBehaviour
         upgradeAbilitiesMenu?.SetActive(false);
         pauseMenu?.SetActive(false);
         crashMenu?.SetActive(false);
+        winMenu?.SetActive(false);
         hudMenu?.SetActive(false);
         menuStack.Clear();
     }
@@ -202,7 +203,15 @@ public class PersistentMenuManager : MonoBehaviour
     }
     #endregion
 
+    public void OpenWinMenu()
+    {
+        if (PlayerController.Instance != null)
+        {
+            PlayerController.Instance.launched = false;
+        }
 
+        OpenMenu(winMenu);
+    }
 
 
 

@@ -10,6 +10,14 @@ public static class SaveSystem
         return Path.Combine(Application.persistentDataPath, FileName);
     }
 
+    /// <summary>
+    /// Returns true if a save file exists on disk.
+    /// </summary>
+    public static bool SaveFileExists()
+    {
+        return File.Exists(GetFullPath());
+    }
+
     public static void Save(GameData data)
     {
         try
@@ -34,7 +42,7 @@ public static class SaveSystem
 #if UNITY_EDITOR
             Debug.Log("[SaveSystem] No save file, creating new GameData.");
 #endif
-            return new GameData();
+            return new GameData(); // fresh defaults
         }
 
         try
@@ -47,6 +55,28 @@ public static class SaveSystem
         {
             Debug.LogError("[SaveSystem] Error loading: " + e);
             return new GameData();
+        }
+    }
+
+    /// <summary>
+    /// Deletes the save file from disk, if it exists.
+    /// </summary>
+    public static void DeleteSave()
+    {
+        string path = GetFullPath();
+
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+#if UNITY_EDITOR
+            Debug.Log("[SaveSystem] Save file deleted.");
+#endif
+        }
+        else
+        {
+#if UNITY_EDITOR
+            Debug.Log("[SaveSystem] No save file to delete.");
+#endif
         }
     }
 }

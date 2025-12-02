@@ -183,7 +183,20 @@ public class PlayerController : MonoBehaviour
 
         StatsManager.Instance?.FinalizeRun();
         SoundManager.Instance?.PlayCrashedSound();
-        PersistentMenuManager.Instance.OpenCrashMenu();
+        PersistentMenuManager.Instance?.OpenCrashMenu();
+        CoinSpawner.Instance?.ClearCoinsInCurrentScene();
+    }
+
+
+    public void WinConditions()
+    {
+        Debug.Log("You Win");
+        Time.timeScale = 0f;
+        rb.linearVelocity = Vector3.zero;
+
+        StatsManager.Instance?.FinalizeRun();
+        PersistentMenuManager.Instance?.OpenWinMenu();
+        CoinSpawner.Instance?.ClearCoinsInCurrentScene();
     }
 
 
